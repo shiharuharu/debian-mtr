@@ -1,3 +1,12 @@
+mtr (0.69-1) unstable; urgency=low
+
+  * New upstream version adds IPv6 support
+  * Fixed copyright file, closes #290215
+  * Allow for IPv4 operation on IPv4-only systems
+  * Copy addr buffer in net_process_ping immediately to avoid overwriting it
+
+ -- Robert Woodcock <rcw@debian.org>  Wed, 23 Mar 2005 19:39:59 -0800
+
 mtr (0.67-1) unstable; urgency=high
 
   * SECURITY: New upstream version fixes off-by-one error with MAXFLD,

@@ -1,10 +1,17 @@
-This package was debianized by Scott K. Ellis storm@stormcrow.ml.org on
-Tue,  2 Jun 1998 09:46:06 -0400 and is now maintained by
-Robert Woodcock <rcw@debian.org>.
-
-The mtr homepage is now at http://www.bitwizard.nl/mtr/ .
-
 Copyright:
 
-mtr is covered under the GNU General Public Licence, Version 2 or later. 
+    mtr  --  a network diagnostic tool
+    Copyright (C) 1997,1998  Matt Kimball
+    Copyright (C) 1999 - 2005 R.E.Wolff@BitWizard.nl
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
 The GPL is located at /usr/share/common-licenses/GPL on your Debian system.

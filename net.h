@@ -18,20 +18,28 @@
 */
 
 /*  Prototypes for functions in net.c  */
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#ifdef ENABLE_IPV6
+#include <netinet/ip6.h>
+#include <netinet/icmp6.h>
+#endif
 
-int net_preopen();
-int net_open(int address);
-void net_reopen(int address);
+int net_preopen(void);
+int net_open(struct hostent *host);
+void net_reopen(struct hostent *address);
 int net_set_interfaceaddress (char *InterfaceAddress); 
-void net_reset();
-void net_close();
-int net_waitfd();
-void net_process_return();
+void net_reset(void);
+void net_close(void);
+int net_waitfd(void);
+void net_process_return(void);
 
 int net_max(void);
 int net_min(void);
 int net_last(int at);
-int net_addr(int at);
+ip_t * net_addr(int at);
 int net_loss(int at);
 int net_drop(int at);
 int net_last(int at);
@@ -44,11 +52,11 @@ int net_jitter(int at);
 int net_jworst(int at);
 int net_javg(int at);
 int net_jinta(int at);
-int net_addrs(int at, int i);
-struct in_addr *net_localaddr(void); 
+ip_t * net_addrs(int at, int i);
+char *net_localaddr(void); 
 
-int net_send_batch();
-void net_end_transit();
+int net_send_batch(void);
+void net_end_transit(void);
 
 int calc_deltatime (float WaitTime);
 
@@ -65,6 +73,10 @@ int* net_saved_pings(int at);
 void net_save_xmit(int at);
 void net_save_return(int at, int seq, int ms);
 int net_duplicate(int at, int seq);
+
+void sockaddrtop( struct sockaddr * saddr, char * strptr, size_t len );
+int addrcmp( char * a, char * b, int af );
+void addrcpy( char * a, char * b, int af );
 
 #define MAXPATH 8
 #define MaxHost 256
@@ -104,3 +116,7 @@ extern int fld_index[];
 extern unsigned char fld_active[];
 extern char available_options[];
 
+ip_t unspec_addr;
+
+FILE *ADDRCMP;
+int i;

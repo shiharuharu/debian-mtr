@@ -519,6 +519,8 @@ info-am:
 install-data-am: install-man
 
 install-exec-am: install-sbinPROGRAMS
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 
 install-info: install-info-recursive
 
@@ -558,7 +560,7 @@ uninstall-man: uninstall-man8
 	uninstall-info-recursive uninstall-man uninstall-man8 \
 	uninstall-recursive uninstall-sbinPROGRAMS
 
-install-exec-am: 
+install-exec-hook: 
 	chmod u+s $(DESTDIR)$(sbindir)/mtr
 distclean-local:
 	cp Makefile.dist Makefile
