@@ -1,0 +1,65 @@
+mtr (0.21-3) frozen unstable; urgency=low
+
+  * Release for frozen, since 0.14 isn't even compilable with the current
+    frozen environment, is slightly buggy, and has potential security holes
+    (being suid for low-level networking) that are addressed by this
+    version.
+
+ -- Scott K. Ellis <scott@debian.org>  Tue,  9 Jun 1998 10:52:57 -0400
+
+mtr (0.21-2) unstable; urgency=low
+
+  * Install SECURITY file into binary package.
+  * Modified description in control file
+
+ -- Scott K. Ellis <scott@debian.org>  Tue,  2 Jun 1998 11:35:00 -0400
+
+mtr (0.21-1) unstable; urgency=low
+
+  * Updated to standards version 2.4.1
+  * Linked properly to X libraries. (#19894)
+  * Rewrote debian/rules to take advanage of debhelper
+  * New upstream release. (#21534)
+
+ -- Scott K. Ellis <scott@debian.org>  Tue,  2 Jun 1998 09:47:45 -0400
+
+mtr (0.14-3) unstable; urgency=low
+
+  * Rebuild with newest gtk fixing #19511, #19517
+
+ -- Christoph Lameter <clameter@debian.org>  Sun, 15 Mar 1998 20:43:11 -0800
+
+mtr (0.14-2) unstable; urgency=low
+
+  * Build with gtk to enable X interface.
+
+ -- Christoph Lameter <clameter@debian.org>  Wed,  4 Feb 1998 11:04:35 -0800
+
+mtr (0.14-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Christoph Lameter <clameter@debian.org>  Sun,  1 Feb 1998 21:00:24 -0800
+
+mtr (0.13-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Christoph Lameter <clameter@debian.org>  Sat,  3 Jan 1998 20:48:53 -0800
+
+mtr (0.12-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Christoph Lameter <clameter@debian.org>  Sun, 28 Dec 1997 20:15:33 -0800
+
+mtr (0.11-1) debs; urgency=low
+
+  * Initial Release.
+
+ -- Christoph Lameter <clameter@debian.org>  Mon, 22 Dec 1997 21:01:15 -0800
+
+Local variables:
+mode: debian-changelog
+add-log-mailing-address: "clameter@debian.org"
+End:
