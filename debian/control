@@ -1,7 +1,7 @@
 Source: mtr
 Section: net
 Priority: optional
-Maintainer: Scott K. Ellis <scott@debian.org>
+Maintainer: Robert Woodcock <rcw@debian.org>
 Standards-Version: 2.4.1
 
 Package: mtr

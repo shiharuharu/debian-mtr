@@ -1,3 +1,10 @@
+mtr (0.28-1) stable; urgency=high
+
+  * Security fix for theoretical stack-smash-and-fork attack -
+    s/seteuid/setuid/ in mtr.c
+
+ -- Robert Woodcock <rcw@debian.org>  Fri,  3 Mar 2000 19:00:40 -0800
+
 mtr (0.28-0.2) frozen unstable; urgency=low
 
   * Rebuilt with libgtk1 (1.0.6) to circumvent problems due to 
