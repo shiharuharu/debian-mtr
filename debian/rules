@@ -10,7 +10,9 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	./configure --prefix=/usr
+	env CC="gcc -I /usr/lib/glib/include" \
+	./configure --prefix=/usr #--with-gtk-prefix=/usr/include/glib -v
+
 	# Add here commands to compile the package.
 	make CFLAGS="-O2 -g -Wall"
 

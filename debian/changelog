@@ -1,3 +1,24 @@
+mtr (0.28-0.2) frozen unstable; urgency=low
+
+  * Rebuilt with libgtk1 (1.0.6) to circumvent problems due to 
+    incompatibilities between the frozen and unstable versions of libgtk1.1 . 
+    (Fixes #29160, #29221, #29332).
+
+ -- J.H.M. Dassen (Ray) <jdassen@wi.LeidenUniv.nl>  Thu, 12 Nov 1998 14:22:10 +0100
+
+mtr (0.28-0.1) frozen unstable; urgency=low
+
+  * New upstream release; corrects the problem of IP numbers being displayed
+    backwards (Fixes #28829).
+
+ -- J.H.M. Dassen (Ray) <jdassen@wi.LeidenUniv.nl>  Mon,  2 Nov 1998 19:53:29 +0100
+
+mtr (0.25-0.1) unstable; urgency=low
+
+  * New upstream release; NMU with Scott's blessing (Fixes #28645).
+
+ -- J.H.M. Dassen (Ray) <jdassen@wi.LeidenUniv.nl>  Wed, 28 Oct 1998 16:48:48 +0100
+
 mtr (0.21-3) frozen unstable; urgency=low
 
   * Release for frozen, since 0.14 isn't even compilable with the current

@@ -38,6 +38,7 @@ int PrintHelp = 0;
 int MaxPing = 16;
 float WaitTime = 1.0;
 char *Hostname = NULL;
+int dns = 1;
 
 void parse_arg(int argc, char **argv) {
   int opt;
@@ -49,12 +50,15 @@ void parse_arg(int argc, char **argv) {
     { "curses", 0, 0, 't' },
     { "gtk", 0, 0, 'g' },
     { "interval", 1, 0, 'i' },
+    { "no-dns", 0, 0, 'n' },
+    { "split", 0, 0, 's' },     /* BL */
+    { "raw", 0, 0, 'l' },
     { 0, 0, 0, 0 }
   };
 
   opt = 0;
   while(1) {
-    opt = getopt_long(argc, argv, "hvrc:tli:", long_options, NULL);
+    opt = getopt_long(argc, argv, "hvrc:tklnsi:", long_options, NULL);
     if(opt == -1)
       break;
 
@@ -77,11 +81,20 @@ void parse_arg(int argc, char **argv) {
     case 'g':
       DisplayMode = DisplayGTK;
       break;
+    case 's':                 /* BL */
+      DisplayMode = DisplaySplit;
+      break;
+    case 'l':
+      DisplayMode = DisplayRaw;
+      break;
+    case 'n':
+      dns = 0;
+      break;
     case 'i':
       WaitTime = atof(optarg);
       if (WaitTime <= 0.0) {
 	fprintf (stderr, "mtr: wait time must be positive\n");
-	exit (-1);
+	exit (1);
       }
       break;
     }
@@ -100,23 +113,22 @@ void parse_arg(int argc, char **argv) {
 int main(int argc, char **argv) {
   int traddr;
   struct hostent *host;
+  int net_preopen_result;
 
   /*  Get the raw sockets first thing, so we can drop to user euid immediately  */
-  if(net_preopen() != 0) {
-    printf("mtr: Unable to get raw socket.  (Executable not suid?)\n");
-    exit(0);
-  }
+
+  net_preopen_result = net_preopen ();
 
   /*  Now drop to user permissions  */
   if(seteuid(getuid())) {
     printf("mtr: Unable to drop permissions.\n");
-    exit(0);
+    exit(1);
   }
 
   /*  Double check, just in case  */
   if(geteuid() != getuid()) {
     printf("mtr: Unable to drop permissions.\n");
-    exit(0);
+    exit(1);
   }
   
   display_detect(&argc, &argv);
@@ -127,12 +139,20 @@ int main(int argc, char **argv) {
     exit(0);
   }
 
-  if(Hostname == NULL || PrintHelp) {
-    printf("usage: %s [-hvrctli] [--help] [--version] [--report]\n"
+  if(PrintHelp) {
+    printf("usage: %s [-hvrctlis] [--help] [--version] [--report]\n"
 	   "\t\t[--report-cycles=COUNT] [--curses] [--gtk]\n"
+           "\t\t[--raw] [--split]\n"      /* BL */
 	   "\t\t[--interval=SECONDS] HOSTNAME\n", argv[0]);
     exit(0);
   }
+  if (Hostname == NULL) Hostname = "localhost";
+
+  if(net_preopen_result != 0) {
+    printf("mtr: Unable to get raw socket.  (Executable not suid?)\n");
+    exit(1);
+  }
+
 
   host = gethostbyname(Hostname);
   if(host == NULL) {
@@ -141,14 +161,14 @@ int main(int argc, char **argv) {
 #else
     printf("mtr: error looking up \"%s\"\n", Hostname);
 #endif
-    exit(0);
+    exit(1);
   }
 
   traddr = *(int *)host->h_addr;
 
   if(net_open(traddr) != 0) {
     printf("mtr: Unable to get raw socket.  (Executable not suid?)\n");
-    exit(0);
+    exit(1);
   }
 
   display_open();

@@ -29,10 +29,14 @@
 #include <netinet/in.h>
 #include <memory.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <math.h>
 
 #include "net.h"
 
-#define MaxHost 256
+
+extern float WaitTime, DeltaTime;
+
 #define MaxTransit 4
 
 /*  We can't rely on header files to provide this information, because
@@ -132,7 +136,7 @@ void net_send_ping(int index) {
 
   ip->version = 0x45;
   ip->tos = 0;
-  ip->len = packetsize;
+  ip->len = htons (packetsize);
   ip->id = 0;
   ip->frag = 0;
   ip->ttl = 127;
@@ -174,7 +178,7 @@ void net_send_query(int hops) {
 
   ip->version = 0x45;
   ip->tos = 0;
-  ip->len = packetsize;
+  ip->len = htons (packetsize);
   ip->id = 0;
   ip->frag = 0;
   ip->ttl = hops;
@@ -200,7 +204,6 @@ void net_process_ping(struct packetdata *data, struct sockaddr_in *addr) {
   int at;
   struct timeval now;
   int totmsec;
-  int msec;
 
   if(data->index >= 0) {
     gettimeofday(&now, NULL);
@@ -210,12 +213,8 @@ void net_process_ping(struct packetdata *data, struct sockaddr_in *addr) {
       /* discard this data point, stats were reset after it was generated */
       return;
     
-    totmsec = (now.tv_sec - data->sec) * 1000;
-    msec = now.tv_usec / 1000 - data->msec;
-    if(msec >= 0) 
-      totmsec += msec;
-    else
-      totmsec = totmsec - 1000 + 1000 - data->msec + now.tv_usec / 1000;
+    totmsec = (now.tv_sec - data->sec) * 1000 +
+              ((now.tv_usec/1000) - data->msec);
 
     if(host[data->index].returned <= 0) {
       host[data->index].best = host[data->index].worst = totmsec;
@@ -227,6 +226,8 @@ void net_process_ping(struct packetdata *data, struct sockaddr_in *addr) {
     if(totmsec > host[data->index].worst)
       host[data->index].worst = totmsec;
 
+    display_rawping (data->index, totmsec);
+
     host[data->index].total += totmsec;
     host[data->index].returned++;
     host[data->index].transit = 0;
@@ -236,6 +237,7 @@ void net_process_ping(struct packetdata *data, struct sockaddr_in *addr) {
       return;
 
     host[at].addr = addr->sin_addr.s_addr;
+    display_rawhost (at, host[at].addr);
   }
 }
 
@@ -277,6 +279,7 @@ void net_process_return() {
       return;
 
     host[at].addr = fromaddr.sin_addr.s_addr;
+    display_rawhost (at, net_addr(at));
   }
 }
 
@@ -342,41 +345,52 @@ void net_end_transit() {
   }
 }
 
-void net_send_batch() {
-  int at;
-  int n_unknown = 10;
 
-  for(at = 0;n_unknown && (at < MaxHost); at++) {
-    if(host[at].addr == 0) {
-      net_send_query(at + 1);
-      n_unknown--;
-    } else {
-      net_send_ping(at);
-    }
 
-    if(host[at].addr == remoteaddress.sin_addr.s_addr) {
-      break;
-    }
+int net_send_batch() {
+  static int n_unknown = 10;
+  static int at;
+
+  if(host[at].addr == 0) {
+    net_send_query(at + 1);
+    n_unknown--;
+  } else {
+    net_send_ping(at);
   }
+  
+  if ((host[at].addr == remoteaddress.sin_addr.s_addr) ||
+      (n_unknown == 0)) {
+    DeltaTime = WaitTime / (float) (at+1);
+    at = 0;
+    n_unknown = 10;
+    return 1;
+  }
+
+  at++;
+  return 0;
 }
 
+
 int net_preopen() {
-  char trueopt = 1;
+  int trueopt = 1;
 
   sendsock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-  if(sendsock == -1)
+  if(sendsock < 0)
     return -1;
 
 #ifdef IP_HDRINCL
   /*  FreeBSD wants this to avoid sending out packets with protocol type RAW
       to the network.  */
-  if(setsockopt(sendsock, 0, IP_HDRINCL, &trueopt, sizeof(trueopt)))
+  if(setsockopt(sendsock, SOL_IP, IP_HDRINCL, &trueopt, sizeof(trueopt)))
+  {
+    perror("setsockopt(IP_HDRINCL,1)");
     return -1;
+  }
 #endif
 
   recvsock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-  if(recvsock == -1)
-    return -1;  
+  if(recvsock < 0)
+    return -1;
 
   return 0;
 }
@@ -400,6 +414,7 @@ void net_reopen(int addr) {
   remoteaddress.sin_family = AF_INET;
   remoteaddress.sin_addr.s_addr = addr;
 
+  net_reset ();
   net_send_batch();
 }
 

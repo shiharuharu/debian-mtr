@@ -1,5 +1,45 @@
 WHAT'S NEW?
 
+  v0.27
+	Fixed bug that showed up on Solaris/x86.
+	Gimp mainloop now runs as it's supposed to.
+
+  v0.26
+        Added "-n" flag for numeric output. 
+        fixed IP numbers displaying backwards.
+        GTK mainloop now runs at 10 packets per second. 
+          - That's too much if there are only 3 hosts
+          - that's too little if there are 20 hosts.
+        -> Someone tell me how to change the "ping-timeout" 
+           callback time in gtk. Can't find it in the docs.
+        The default for "hostname" is now "localhost" so that
+        you can start mtr without any arguments and later 
+        fill in the host you want to trace to. 
+
+  v0.25
+        Included two "raw" formats. One for separating GUI from
+        the setuid program, and one suitable for later parsing and
+        displaying. Volunteers wanted to separate the GTK 
+        backend. Thanks to Bertrand Leconte for contributing 
+        the format that's now called "split". 
+
+  v0.24 
+        Fixed number of probes. Accidentally was counted per 
+        packet sent instead of per round of packets. 
+
+  v0.23
+        Fixed Sparc alignment problem with statmalloc
+
+  v0.22 
+        Roger has take over maintenance. 
+        mtr now uses an "int" to pass options to the kernel. 
+        Makes things work on Solaris and *BSD I'm told. 
+        mtr doesn't fire off a flurry of packets when a new
+        second comes around. Instead they are spaced evenly
+        around the whole second. This allows people with a 
+        relatively slow first link to do meaningful measurements
+        of whatever is behind that.
+
   v0.21
         mtr now drops root permissions after it acquires the raw
         sockets it needs.
