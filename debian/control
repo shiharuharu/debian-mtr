@@ -2,8 +2,8 @@ Source: mtr
 Section: net
 Priority: standard
 Maintainer: Robert Woodcock <rcw@debian.org>
-Standards-Version: 3.2.1
-Build-Depends: libncurses-dev, autoconf, automake, debhelper (>= 2.2.12), libgtk1.2-dev
+Standards-Version: 3.6.1
+Build-Depends: libncurses-dev, debhelper (>= 2.2.12), libgtk2.0-dev
 
 Package: mtr
 Architecture: any

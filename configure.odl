@@ -793,7 +793,7 @@ fi
 
 # Define the identity of the package.
 PACKAGE=mtr
-VERSION=0.67
+VERSION=0.63
 cat >> confdefs.h <<EOF
 #define PACKAGE "$PACKAGE"
 EOF
@@ -1941,7 +1941,7 @@ fi
     if pkg-config --atleast-pkgconfig-version 0.7 ; then
       :
     else
-      echo "*** pkg-config too old; version 0.7 or better required."
+      echo *** pkg-config too old; version 0.7 or better required.
       no_gtk=yes
       PKG_CONFIG=no
     fi
@@ -2080,7 +2080,7 @@ fi
   if test "x$no_gtk" = x ; then
      echo "$ac_t""yes (version $gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)" 1>&6
      CFLAGS="$CFLAGS $GTK_CFLAGS"
-                           LIBS="$LIBS $GTK_LIBS -lm"     
+                           LIBS="$LIBS $GTK_LIBS"     
   else
      echo "$ac_t""no" 1>&6
      if test "$PKG_CONFIG" = "no" ; then
@@ -2091,12 +2091,10 @@ fi
         :
        else
           echo "*** Could not run GTK+ test program, checking why..."
-	  ac_save_CFLAGS="$CFLAGS"
-	  ac_save_LIBS="$LIBS"
           CFLAGS="$CFLAGS $GTK_CFLAGS"
           LIBS="$LIBS $GTK_LIBS"
           cat > conftest.$ac_ext <<EOF
-#line 2100 "configure"
+#line 2098 "configure"
 #include "confdefs.h"
 
 #include <gtk/gtk.h>
@@ -2106,7 +2104,7 @@ int main() {
  return ((gtk_major_version) || (gtk_minor_version) || (gtk_micro_version)); 
 ; return 0; }
 EOF
-if { (eval echo configure:2110: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:2108: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
    echo "*** The test program compiled, but did not run. This usually means"
           echo "*** that the run-time linker is not finding GTK+ or finding the wrong"
@@ -2122,7 +2120,9 @@ else
   cat conftest.$ac_ext >&5
   rm -rf conftest*
    echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occured. This usually means GTK+ is incorrectly installed."
+          echo "*** exact error that occured. This usually means GTK+ was incorrectly installed"
+          echo "*** or that you have moved GTK+ since it was installed. In the latter case, you"
+          echo "*** may want to edit the pkg-config script: $PKG_CONFIG" 
 fi
 rm -f conftest*
           CFLAGS="$ac_save_CFLAGS"

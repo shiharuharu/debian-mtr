@@ -10,7 +10,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	mkdir mtr && cd mtr && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin
+	mkdir mtr && cd mtr && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --enable-gtk2
 	make -C mtr
 
 	mkdir mtr-tiny && cd mtr-tiny && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --without-gtk

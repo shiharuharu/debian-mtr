@@ -1,3 +1,82 @@
+mtr (0.67-0.sarge1) testing-proposed-updates; urgency=high
+
+  * SECURITY: Reupload version from unstable to testing-proposed-updates,
+    closes: #285228
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 26 Dec 2004 20:03:45 -0800
+
+mtr (0.67-1) unstable; urgency=high
+
+  * SECURITY: New upstream version fixes off-by-one error with MAXFLD,
+    closes: #285228
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 12 Dec 2004 11:26:07 -0800
+
+mtr (0.63-1.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Apply patch from Christoph Berg <cb@df7cb.de> converting fld_index[] from
+    char to int in order to work around the invalid assumption that plain char++
+    is always unsigned (closes: #283756).
+
+ -- Mark Brown <broonie@debian.org>  Thu,  9 Dec 2004 11:39:42 +0000
+
+mtr (0.63-1.1) unstable; urgency=low
+
+  * NMU.
+  * Remove useless dependency on non-existing automake-1.5 and
+    autoconf (Closes: #266006).
+
+ -- Christoph Berg <cb@df7cb.de>  Sat, 27 Nov 2004 01:34:28 +0100
+
+mtr (0.63-1) unstable; urgency=low
+
+  * New upstream version
+  * New version compiles against gtk2.4, closes: #262606
+  * New version validates input to order-of-fields option, preventing
+    segfaults, closes: #264055, #264694
+  * Fixed virtual dependancy on automaken in response to #257981
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 15 Aug 2004 16:35:32 -0700
+
+mtr (0.58-1) unstable; urgency=low
+
+  * New upstream version, closes: #252369
+
+ -- Robert Woodcock <rcw@debian.org>  Sat, 03 Jul 2004 13:59:24 -0700
+
+mtr (0.54-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Robert Woodcock <rcw@debian.org>  Sat,  3 May 2003 08:57:48 -0700
+
+mtr (0.53-1) unstable; urgency=low
+
+  * New upstream version, closes: #189692
+
+ -- Robert Woodcock <rcw@debian.org>  Wed, 23 Apr 2003 19:08:15 -0700
+
+mtr (0.52-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 24 Nov 2002 12:11:51 -0800
+
+mtr (0.51-1) unstable; urgency=low
+
+  * New upstream version fixes hanging --report option, closes: #148045
+  * Reverted some makefile reversions in 0.51
+
+ -- Robert Woodcock <rcw@debian.org>  Fri, 24 May 2002 16:06:34 -0700
+
+mtr (0.50-1) unstable; urgency=low
+
+  * New upstream version
+  * Fixes hang on window resize bug, closes: #94913, #145641
+
+ -- Robert Woodcock <rcw@debian.org>  Tue,  7 May 2002 21:13:32 -0700
+
 mtr (0.48-1) unstable; urgency=high
 
   * New upstream version, fixes MTR_OPTIONS security hole, closes #137102

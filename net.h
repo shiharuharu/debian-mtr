@@ -22,16 +22,31 @@
 int net_preopen();
 int net_open(int address);
 void net_reopen(int address);
+int net_set_interfaceaddress (char *InterfaceAddress); 
 void net_reset();
 void net_close();
 int net_waitfd();
 void net_process_return();
-int net_max();
+
+int net_max(void);
+int net_min(void);
+int net_last(int at);
 int net_addr(int at);
-int net_percent(int at);
+int net_loss(int at);
+int net_drop(int at);
+int net_last(int at);
 int net_best(int at);
 int net_worst(int at);
 int net_avg(int at);
+int net_gmean(int at);
+int net_stdev(int at);
+int net_jitter(int at);
+int net_jworst(int at);
+int net_javg(int at);
+int net_jinta(int at);
+int net_addrs(int at, int i);
+struct in_addr *net_localaddr(void); 
+
 int net_send_batch();
 void net_end_transit();
 
@@ -51,8 +66,41 @@ void net_save_xmit(int at);
 void net_save_return(int at, int seq, int ms);
 int net_duplicate(int at, int seq);
 
+#define MAXPATH 8
 #define MaxHost 256
 #define MaxSequence 65536
 
-#define MAXPACKET 4096
-#define MINPACKET 64
+#define MAXPACKET 4470		/* largest test ICMP packet size */
+#define MINPACKET 28		/* 20 bytes IP header and 8 bytes ICMP */
+
+/* stuff used by display such as report, curses... --Min */
+#define MAXFLD 20		/* max stats fields to display */
+
+#if defined (__STDC__) && __STDC__
+#define CONST const
+#else
+#define CONST /* */
+#endif
+
+
+/* XXX This doesn't really belong in this header file, but as the
+   right c-files include it, it will have to do for now. -- REW */
+
+/* dynamic field drawing */
+struct fields {
+  CONST unsigned char key;
+  CONST char *descr;
+  CONST char *title;
+  CONST char *format;
+  int length;
+  int (*net_xxx)();
+};
+
+extern struct fields data_fields[MAXFLD];
+
+
+/* keys: the value in the array is the index number in data_fields[] */
+extern int fld_index[];
+extern unsigned char fld_active[];
+extern char available_options[];
+

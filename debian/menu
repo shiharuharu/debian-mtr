@@ -1,1 +1,1 @@
-?package(mtr):needs=x11	section=Apps/Net title="mtr" command="mtr"
+?package(mtr):needs="x11"	section="Apps/Net" title="mtr" command="mtr"
