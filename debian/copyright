@@ -1,9 +1,10 @@
 This package was debianized by Scott K. Ellis storm@stormcrow.ml.org on
-Tue,  2 Jun 1998 09:46:06 -0400.
+Tue,  2 Jun 1998 09:46:06 -0400 and is now maintained by
+Robert Woodcock <rcw@debian.org>.
 
 The mtr homepage is now at http://www.bitwizard.nl/mtr/ .
 
 Copyright:
 
 mtr is covered under the GNU General Public Licence, Version 2 or later. 
-The GPL is located at /usr/doc/copyright/GPL on your Debian system.
+The GPL is located at /usr/share/common-licenses/GPL on your Debian system.

@@ -1,4 +1,4 @@
-.TH MTR 8 "December 28, 1997" "mtr" "mtr"
+.TH MTR 8 "March 4, 1999" "mtr" "mtr"
 
 
 .SH NAME
@@ -8,7 +8,7 @@ mtr \- a network diagnostic tool
 .SH SYNOPSIS
 .B mtr 
 [\c
-.B \-hvrctgi\c
+.B \-hvrctglsni\c
 ]
 [\c
 .B \-\-help\c
@@ -40,13 +40,16 @@ mtr \- a network diagnostic tool
 [\c
 .B \-\-interval\ SECONDS\c
 ]
-.B HOSTNAME
+[\c
+.B \-\-psize\ BYTES | -p BYTES\c
+]
+.B HOSTNAME [PACKETSIZE]
 
 
 .SH DESCRIPTION
 
 .B mtr 
-combines the functionaly of the 
+combines the functionality of the 
 .B traceroute
 and 
 .B ping
@@ -116,6 +119,15 @@ is only useful with the
 .B -r
 option. 
 
+.TP
+.B \-p\ BYTES
+.TP
+.B \-\-psize\ BYTES
+.TP
+.B PACKETSIZE
+These options or a trailing PACKETSIZE on the commandline sets 
+the packet size used for probing.
+It is in bytes inclusive IP and ICMP headers
 .TP
 .B \-t
 .TP

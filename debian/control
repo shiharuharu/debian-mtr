@@ -2,13 +2,14 @@ Source: mtr
 Section: net
 Priority: optional
 Maintainer: Robert Woodcock <rcw@debian.org>
-Standards-Version: 2.4.1
+Standards-Version: 2.5.0.0
+Build-Depends: libncurses-dev, autoconf, automake, debhelper, libgtk1.2-dev
 
 Package: mtr
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: Full screen ncurses or X11 traceroute tool
- mtr combines the functionaly of the 'traceroute' and 'ping' programs 
+ mtr combines the functionality of the 'traceroute' and 'ping' programs 
  in a single network diagnostic tool.
  As mtr starts, it investigates the network connection between the host
  mtr runs on and a user-specified destination host.  After it

@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "mtr-curses.h"
 #include "getopt.h"
@@ -31,6 +30,12 @@
 #include "report.h"
 #include "net.h"
 
+
+#ifndef HAVE_SETEUID
+/* HPUX doesn't have seteuid, but setuid works fine in that case for us */
+#define seteuid setuid
+#endif
+
 int DisplayMode;
 int Interactive = 1;
 int PrintVersion = 0;
@@ -38,7 +43,9 @@ int PrintHelp = 0;
 int MaxPing = 16;
 float WaitTime = 1.0;
 char *Hostname = NULL;
+char LocalHostname[128];
 int dns = 1;
+int packetsize = MINPACKET;
 
 void parse_arg(int argc, char **argv) {
   int opt;
@@ -50,6 +57,7 @@ void parse_arg(int argc, char **argv) {
     { "curses", 0, 0, 't' },
     { "gtk", 0, 0, 'g' },
     { "interval", 1, 0, 'i' },
+    { "psize", 1, 0, 'p' },
     { "no-dns", 0, 0, 'n' },
     { "split", 0, 0, 's' },     /* BL */
     { "raw", 0, 0, 'l' },
@@ -58,7 +66,7 @@ void parse_arg(int argc, char **argv) {
 
   opt = 0;
   while(1) {
-    opt = getopt_long(argc, argv, "hvrc:tklnsi:", long_options, NULL);
+    opt = getopt_long(argc, argv, "hvrc:tklnsi:p:", long_options, NULL);
     if(opt == -1)
       break;
 
@@ -73,7 +81,10 @@ void parse_arg(int argc, char **argv) {
       DisplayMode = DisplayReport;
       break;
     case 'c':
-      MaxPing = atoi(optarg);
+      MaxPing = atoi (optarg);
+      break;
+    case 'p':
+      packetsize = atoi (optarg);
       break;
     case 't':
       DisplayMode = DisplayCurses;
@@ -91,11 +102,13 @@ void parse_arg(int argc, char **argv) {
       dns = 0;
       break;
     case 'i':
-      WaitTime = atof(optarg);
+      WaitTime = atof (optarg);
       if (WaitTime <= 0.0) {
 	fprintf (stderr, "mtr: wait time must be positive\n");
 	exit (1);
       }
+      if (getuid() != 0 && WaitTime < 1.0)
+       WaitTime = 1.0;
       break;
     }
   }
@@ -103,12 +116,40 @@ void parse_arg(int argc, char **argv) {
   if(DisplayMode == DisplayReport)
     Interactive = 0;
 
-  if(optind != argc - 1)
+  if(optind > argc - 1)
     return;
 
-  Hostname = argv[optind];
+  Hostname = argv[optind++];
+
+  if (argc > optind) 
+    packetsize = atoi(argv[optind]);
 
 }
+
+
+void parse_mtr_options (char *string)
+{
+  int argc;
+  char *argv[128], *p;
+  int i;
+
+  if (!string) return;
+
+  argv[0] = "mtr";
+  argc = 1;
+  p = strtok (string, " \t");
+  while (p && (argc < (sizeof(argv)/sizeof(argv[0])))) {
+    argv[argc++] = p;
+    p = strtok (NULL, " \t");
+  }
+  if (p) {
+    fprintf (stderr, "Warning: extra arguments ignored: %s", p);
+  }
+  parse_arg (argc, argv);
+  optind = 0;
+}
+
+
 
 int main(int argc, char **argv) {
   int traddr;
@@ -120,7 +161,7 @@ int main(int argc, char **argv) {
   net_preopen_result = net_preopen ();
 
   /*  Now drop to user permissions  */
-  if(seteuid(getuid())) {
+  if(setuid(getuid())) {
     printf("mtr: Unable to drop permissions.\n");
     exit(1);
   }
@@ -132,6 +173,9 @@ int main(int argc, char **argv) {
   }
   
   display_detect(&argc, &argv);
+
+  parse_mtr_options (getenv ("MTR_OPTIONS"));
+
   parse_arg(argc, argv);
 
   if(PrintVersion) {
@@ -140,13 +184,18 @@ int main(int argc, char **argv) {
   }
 
   if(PrintHelp) {
-    printf("usage: %s [-hvrctlis] [--help] [--version] [--report]\n"
+    printf("usage: %s [-hvrctglsni] [--help] [--version] [--report]\n"
 	   "\t\t[--report-cycles=COUNT] [--curses] [--gtk]\n"
-           "\t\t[--raw] [--split]\n"      /* BL */
-	   "\t\t[--interval=SECONDS] HOSTNAME\n", argv[0]);
+           "\t\t[--raw] [--split] [--no-dns]\n"      /* BL */
+           "\t\t[--psize=bytes/-p=bytes]\n"            /* ok */
+	   "\t\t[--interval=SECONDS] HOSTNAME [PACKETSIZE]\n", argv[0]);
     exit(0);
   }
   if (Hostname == NULL) Hostname = "localhost";
+
+  if(gethostname(LocalHostname, sizeof(LocalHostname))) {
+	strcpy(LocalHostname, "UNKNOWNHOST");
+  }
 
   if(net_preopen_result != 0) {
     printf("mtr: Unable to get raw socket.  (Executable not suid?)\n");
@@ -174,6 +223,7 @@ int main(int argc, char **argv) {
   display_open();
   dns_open();
 
+  display_mode = 0;
   display_loop();
 
   net_end_transit();

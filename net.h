@@ -35,10 +35,22 @@ int net_avg(int at);
 int net_send_batch();
 void net_end_transit();
 
+int calc_deltatime (float WaitTime);
+
+
 /* Added by Brian Casey, December 1997 bcasey@imagiware.com*/
 int net_returned(int at);
 int net_xmit(int at);
 int net_transit(int at);
 
+#define SAVED_PINGS 50
+int* net_saved_pings(int at);
+void net_save_xmit(int at);
+void net_save_return(int at, int seq, int ms);
+int net_duplicate(int at, int seq);
 
 #define MaxHost 256
+#define MaxSequence 65536
+
+#define MAXPACKET 4096
+#define MINPACKET 64

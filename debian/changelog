@@ -1,9 +1,64 @@
-mtr (0.28-1) stable; urgency=high
+mtr (0.41-6) stable; urgency=high
+
+  * Security fix for format overflow with MTR_OPTIONS, closes: #137102
+  * Added build-depends line from unstable package
+
+ -- Robert Woodcock <rcw@debian.org>  Wed,  6 Mar 2002 09:50:29 -0800
+
+mtr (0.41-5) frozen unstable; urgency=low
 
   * Security fix for theoretical stack-smash-and-fork attack -
     s/seteuid/setuid/ in mtr.c
 
- -- Robert Woodcock <rcw@debian.org>  Fri,  3 Mar 2000 19:00:40 -0800
+ -- Robert Woodcock <rcw@debian.org>  Fri,  3 Mar 2000 19:36:56 -0800
+
+mtr (0.41-4) frozen unstable; urgency=low
+
+  * s/bind/resolv/ in configure.in line 55 and 62 to prevent ./configure
+    from getting confuzzled when bind-dev is installed, closes: #56394
+
+ -- Robert Woodcock <rcw@debian.org>  Sat, 29 Jan 2000 13:59:12 -0800
+
+mtr (0.41-3) unstable; urgency=low
+
+  * Recompiled against libncurses5
+  * Fixed postinst symlinking
+
+ -- Robert Woodcock <rcw@debian.org>  Sun,  9 Jan 2000 13:05:54 -0800
+
+mtr (0.41-2) unstable; urgency=low
+
+  * FHS compliance
+
+ -- Robert Woodcock <rcw@debian.org>  Fri, 24 Sep 1999 19:56:59 -0700
+
+mtr (0.41-1) unstable; urgency=low
+
+  * New upstream version
+  * 0.39-1 was accidentally built as a debian-native package. Fixed that.
+    closes: #44276.
+
+ -- Robert Woodcock <rcw@debian.org>  Sat,  4 Sep 1999 22:13:24 -0700
+
+mtr (0.39-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 13 Jun 1999 22:56:42 -0700
+
+mtr (0.37-1) unstable; urgency=low
+
+  * New upstream release
+  * Compiled against gtk 1.2 for that extra-special theme feeling
+  * Added entry in Debian menu system
+
+ -- Robert Woodcock <rcw@debian.org>  Wed,  5 May 1999 19:18:57 -0700
+
+mtr (0.34-1) unstable; urgency=low
+
+  * New upstream version, new maintainer
+
+ -- Robert Woodcock <rcw@debian.org>  Tue,  6 Apr 1999 19:37:23 -0700
 
 mtr (0.28-0.2) frozen unstable; urgency=low
 
