@@ -1,4 +1,4 @@
-/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
 
 /* Define if you don't have the GTK+ libraries available.  */
 #undef NO_GTK
@@ -55,6 +55,9 @@
 /* Define if you have the <sys/xti.h> header file.  */
 #undef HAVE_SYS_XTI_H
 
+/* Define if you have the bind library (-lbind).  */
+#undef HAVE_LIBBIND
+
 /* Define if you have the m library (-lm).  */
 #undef HAVE_LIBM
 
@@ -63,9 +66,6 @@
 
 /* Define if you have the nsl library (-lnsl).  */
 #undef HAVE_LIBNSL
-
-/* Define if you have the resolv library (-lresolv).  */
-#undef HAVE_LIBRESOLV
 
 /* Define if you have the socket library (-lsocket).  */
 #undef HAVE_LIBSOCKET

@@ -22,6 +22,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/select.h>
 #include <string.h>
 #include <math.h>
 
@@ -148,6 +149,11 @@ void select_loop() {
 
       if (action == ActionResume) 
 	paused=0;
+
+      if (action == ActionDNS && dns) {
+	use_dns = !use_dns;
+	display_clear();
+      }
 
       anyset = 1;
     }

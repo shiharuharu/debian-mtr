@@ -1,9 +1,83 @@
-mtr (0.41-6) stable; urgency=high
+mtr (0.48-1) unstable; urgency=high
 
-  * Security fix for format overflow with MTR_OPTIONS, closes: #137102
-  * Added build-depends line from unstable package
+  * New upstream version, fixes MTR_OPTIONS security hole, closes #137102
+  * Added absolute pathnames to debian/rules
 
- -- Robert Woodcock <rcw@debian.org>  Wed,  6 Mar 2002 09:50:29 -0800
+ -- Robert Woodcock <rcw@debian.org>  Wed,  6 Mar 2002 10:10:05 -0800
+
+mtr (0.45-1) unstable; urgency=low
+
+  * New upstream version, closes: #130683
+
+ -- Robert Woodcock <rcw@debian.org>  Thu, 24 Jan 2002 16:57:26 -0800
+
+mtr (0.44-2) unstable; urgency=low
+
+  * Removed mtr-tiny menu entry, closes: #125741
+  * Fixed paragraph separation in package descriptions, closes: #120790
+  * Lintian cleanups
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 30 Dec 2001 13:38:11 -0800
+
+mtr (0.44-1) unstable; urgency=low
+
+  * New upstream version
+  * Added explicit build dependancies on gtk 1.2 to get the build daemons
+    to compile mtr against the newer version, closes: #103875
+
+ -- Robert Woodcock <rcw@debian.org>  Fri,  3 Aug 2001 09:02:34 -0700
+
+mtr (0.42-7) unstable; urgency=low
+
+  * The glibc folks changed res_init to a macro. Changed configure.in
+    to check for res_init with AC_TRY_COMPILE instead of AC_CHECK_LIB,
+    closes: #90365
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 15 Apr 2001 15:36:23 -0700
+
+mtr (0.42-6) unstable; urgency=low
+
+  * Added Build-Depends, closes: #83027
+  * Removed menu file for mtr-tiny, closes: #80734
+  * Fixed mtr-tiny postrm filename
+  * Removed suidregister stuff
+
+ -- Robert Woodcock <rcw@debian.org>  Mon, 22 Jan 2001 07:31:43 -0800
+
+mtr (0.42-5) unstable; urgency=low
+
+  * Added Philippe Troin's RFC 2317 CNAME->PTR reverse lookup patch,
+    closes: #29665, #38115, #42521, #46549, #78637
+
+ -- Robert Woodcock <rcw@debian.org>  Sat,  2 Dec 2000 17:44:12 -0800
+
+mtr (0.42-4) unstable; urgency=low
+
+  * Set mtr-tiny to Priority: standard
+  * Included mtr's documentation in the mtr-tiny package
+
+ -- Robert Woodcock <rcw@debian.org>  Tue,  3 Oct 2000 22:24:48 -0700
+
+mtr (0.42-3) unstable; urgency=low
+
+  * Split mtr into two packages - mtr and mtr-tiny. mtr-tiny is built
+    without X support and is useful for machines where disk space is a
+    priority. closes: #67367, #64727, #33335
+
+ -- Robert Woodcock <rcw@debian.org>  Mon,  2 Oct 2000 22:35:07 -0700
+
+mtr (0.42-2) unstable; urgency=low
+
+  * For some reason, the getopt() call was missing -g. Added it back
+    in (the code behind the option was already there)
+
+ -- Robert Woodcock <rcw@debian.org>  Wed,  6 Sep 2000 18:18:15 -0700
+
+mtr (0.42-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Robert Woodcock <rcw@debian.org>  Thu,  9 Mar 2000 17:16:50 -0800
 
 mtr (0.41-5) frozen unstable; urgency=low
 
@@ -141,8 +215,3 @@ mtr (0.11-1) debs; urgency=low
   * Initial Release.
 
  -- Christoph Lameter <clameter@debian.org>  Mon, 22 Dec 1997 21:01:15 -0800
-
-Local variables:
-mode: debian-changelog
-add-log-mailing-address: "clameter@debian.org"
-End:

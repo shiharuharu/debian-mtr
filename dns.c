@@ -26,6 +26,7 @@
 #include <config.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/errno.h>
 #include <sys/socket.h>
@@ -284,6 +285,7 @@ char tempstring[16384+1+1];
 char sendstring[1024+1];
 char namestring[1024+1];
 char stackstring[1024+1];
+char aliasstring[1024+1];
 
 char nullstring[] = "";
 
@@ -945,11 +947,11 @@ void parserespacket(byte *s,int l){
                   restell("Resolver error: dn_expand() failed while expanding answer domain.");
                   return;
                }
-               namestring[strlen(stackstring)] = '\0';
-               if (strcasecmp(stackstring,namestring))
-                  usefulanswer = 0;
-               else
+               if (strcasecmp(stackstring,namestring)==0
+		   || strcasecmp(aliasstring, namestring)==0)
                   usefulanswer = 1;
+               else
+                  usefulanswer = 0;
                if (debug){
                   sprintf(tempstring,"Resolver: answered domain query: \"%s\"",namestring);
                   restell(tempstring);
@@ -981,7 +983,7 @@ void parserespacket(byte *s,int l){
                   restell("Resolver error: Specified rdata length exceeds packet size.");
                   return;
                }
-               if (datatype == qdatatype){
+               if (datatype == qdatatype || datatype == T_CNAME){
                   if (debug){
                      sprintf(tempstring,"Resolver: TTL: %s",strtdiff(sendstring,ttl));
                      restell(tempstring);
@@ -1013,6 +1015,7 @@ void parserespacket(byte *s,int l){
                            }
                            break;
                         case T_PTR:
+                        case T_CNAME:
                            *namestring = '\0';
                            r = dn_expand(s,s + l,c,namestring,MAXDNAME);
                            if (r == -1){
@@ -1027,6 +1030,10 @@ void parserespacket(byte *s,int l){
                               restell("Resolver error: Domain name too long.");
                               failrp(rp);
                               return;
+                           }
+                           if (datatype == T_CNAME){
+                              strcpy(stackstring,namestring);
+                              break;
                            }
                            if (!rp->hostname){
                               rp->hostname = (char *)statmalloc(strlen(namestring) + 1);
@@ -1046,7 +1053,26 @@ void parserespacket(byte *s,int l){
                              resourcetypes[datatype] : resourcetypes[ResourcetypeCount]);
                            restell(tempstring);
                      }
-               } else {
+               } else if (datatype == T_CNAME && usefulanswer) {
+		 /* RFC 2317 (Classless IN-ADDR.ARPA delegation support)
+		    by Philippe Troin <phil@fifi.org> */
+		 r = dn_expand(s,s + l,c,namestring,MAXDNAME);
+		 if (r == -1){
+		   restell("Resolver error: dn_expand() failed while expanding cname in rdata.");
+		   return;
+		 }
+		 if (r > HostnameLength){
+		   restell("Resolver error: Domain name too long.");
+		   failrp(rp);
+		   return;
+		 }
+		 strcpy(aliasstring, namestring);
+		 if (debug){
+		   sprintf(tempstring,"Resolver: CNAME: \"%s\" -> \"%s\"",
+			   stackstring, aliasstring);
+		   restell(tempstring);
+		 }
+	       } else {
                   if (debug){
                      sprintf(tempstring,"Resolver: Ignoring resource type %u. (%s)",
                       datatype,datatype < ResourcetypeCount ?
@@ -1188,11 +1214,12 @@ char *dns_lookup2(ip_t ip){
    return NULL;
 }
 
+int use_dns = 1;
 
 char *dns_lookup(ip_t ip){
   char *t;
 
   if (!dns) return strlongip (ip);
   t = dns_lookup2 (ip);
-  return t?t:strlongip(ip);
+  return (t&&use_dns)?t:strlongip(ip);
 }

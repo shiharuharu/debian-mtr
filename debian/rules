@@ -10,19 +10,19 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	env CC="gcc -I /usr/lib/glib/include" \
-	./configure --prefix=debian/tmp/usr --mandir=debian/tmp/usr/share/man --sbindir=debian/tmp/usr/bin
-#--with-gtk-prefix=/usr/include/glib -v
+	mkdir mtr && cd mtr && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin
+	make -C mtr
 
-	# Add here commands to compile the package.
-	make CFLAGS="-O2 -g -Wall"
+	mkdir mtr-tiny && cd mtr-tiny && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --without-gtk
+	make -C mtr-tiny
 
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
+	-rm -f build-stamp
+	-rm -r mtr mtr-tiny
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
@@ -42,28 +42,52 @@ binary-arch: build
 	dh_installdirs
 
 	# Add here commands to install the files into debian/tmp
-	$(MAKE) install #prefix=`pwd`/debian/tmp/usr
-#	mv debian/tmp/usr/sbin/mtr debian/tmp/usr/bin/
+	$(MAKE) -C mtr-tiny prefix=`pwd`/debian/mtr-tiny/usr install
+	mv mtr-tiny/debian/tmp/usr/bin/mtr debian/mtr-tiny/usr/bin/
 #	rmdir debian/tmp/usr/sbin
 
-	dh_installdocs
-#	dh_installexamples
-	dh_installmenu
-#	dh_installinit
-#	dh_installcron
-	dh_installmanpages
-#	dh_undocumented
-	dh_installchangelogs NEWS
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_suidregister
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-#	dh_makeshlibs
-	dh_md5sums
-	dh_builddeb
+	dh_installdocs -pmtr-tiny
+#	dh_installexamples -mtr-ptiny
+	dh_installmenu -pmtr-tiny
+#	dh_installinit -pmtr-tiny
+#	dh_installcron -pmtr-tiny
+	dh_installmanpages -pmtr-tiny
+#	dh_undocumented -pmtr-tiny
+	dh_installchangelogs -pmtr-tiny NEWS
+	dh_strip -pmtr-tiny
+	dh_compress -pmtr-tiny
+#	dh_fixperms -pmtr-tiny
+#	dh_suidregister -pmtr-tiny
+	dh_installdeb -pmtr-tiny
+	dh_shlibdeps -pmtr-tiny
+	dh_gencontrol -pmtr-tiny
+#	dh_makeshlibs -pmtr-tiny
+	dh_md5sums -pmtr-tiny
+	dh_builddeb -pmtr-tiny
+
+	dh_installdirs -pmtr
+	$(MAKE) -C mtr prefix=`pwd`/debian/mtr/usr install
+	mv mtr/debian/tmp/usr/bin/mtr debian/tmp/usr/bin/
+
+	dh_installdocs -pmtr
+#	dh_installexamples -pmtr
+	dh_installmenu -pmtr
+#	dh_installinit -pgtk
+#	dh_installcron -pmtr
+	dh_installmanpages -pmtr
+#	dh_undocumented -pmtr
+	dh_installchangelogs -pmtr NEWS
+	dh_strip -pmtr
+	dh_compress -pmtr
+#	dh_fixperms -pmtr
+#	dh_suidregister -pmtr
+	dh_installdeb -pmtr
+	dh_shlibdeps -pmtr
+	dh_gencontrol -pmtr
+#	dh_makeshlibs -pmtr
+	dh_md5sums -pmtr
+	dh_builddeb -pmtr
+
 
 source diff:                                                                  
 	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false

@@ -1,15 +1,5 @@
 #!/bin/sh
-if command -v suidregister >/dev/null 2>&1 && [ -e /etc/suid.conf ]; then
-        suidregister -s mtr /usr/bin/mtr root root 4755
-else
-        chown root.root /usr/bin/mtr
-        chmod 4755 /usr/bin/mtr
-fi
 if [ -x /usr/bin/update-menus ]; then
 	/usr/bin/update-menus
 fi
-if [ "$1" = "configure" ]; then
-	if [ -d /usr/doc -a ! -e /usr/doc/mtr -a -d /usr/share/doc/mtr ]; then
-		ln -sf ../share/doc/mtr /usr/doc/mtr
-	fi
-fi
+#DEBHELPER#

@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netinet/in.h>
 
 #include "mtr-curses.h"
 #include "getopt.h"
@@ -37,12 +38,14 @@
 #endif
 
 int DisplayMode;
+int display_mode;
 int Interactive = 1;
 int PrintVersion = 0;
 int PrintHelp = 0;
 int MaxPing = 16;
 float WaitTime = 1.0;
 char *Hostname = NULL;
+char *InterfaceAddress = NULL;
 char LocalHostname[128];
 int dns = 1;
 int packetsize = MINPACKET;
@@ -60,13 +63,14 @@ void parse_arg(int argc, char **argv) {
     { "psize", 1, 0, 'p' },
     { "no-dns", 0, 0, 'n' },
     { "split", 0, 0, 's' },     /* BL */
+    { "address", 1, 0, 'a' },
     { "raw", 0, 0, 'l' },
     { 0, 0, 0, 0 }
   };
 
   opt = 0;
   while(1) {
-    opt = getopt_long(argc, argv, "hvrc:tklnsi:p:", long_options, NULL);
+    opt = getopt_long(argc, argv, "a:hvrc:tgklnsi:p:", long_options, NULL);
     if(opt == -1)
       break;
 
@@ -88,6 +92,9 @@ void parse_arg(int argc, char **argv) {
       break;
     case 't':
       DisplayMode = DisplayCurses;
+      break;
+    case 'a':
+      InterfaceAddress = optarg;
       break;
     case 'g':
       DisplayMode = DisplayGTK;
@@ -145,10 +152,10 @@ void parse_mtr_options (char *string)
   if (p) {
     fprintf (stderr, "Warning: extra arguments ignored: %s", p);
   }
+
   parse_arg (argc, argv);
   optind = 0;
 }
-
 
 
 int main(int argc, char **argv) {
@@ -186,7 +193,7 @@ int main(int argc, char **argv) {
   if(PrintHelp) {
     printf("usage: %s [-hvrctglsni] [--help] [--version] [--report]\n"
 	   "\t\t[--report-cycles=COUNT] [--curses] [--gtk]\n"
-           "\t\t[--raw] [--split] [--no-dns]\n"      /* BL */
+           "\t\t[--raw] [--split] [--no-dns] [--address interface]\n" /* BL */
            "\t\t[--psize=bytes/-p=bytes]\n"            /* ok */
 	   "\t\t[--interval=SECONDS] HOSTNAME [PACKETSIZE]\n", argv[0]);
     exit(0);
@@ -203,6 +210,33 @@ int main(int argc, char **argv) {
   }
 
 
+  if(InterfaceAddress) { /* Mostly borrowed from ping(1) code */
+    struct sockaddr_in source;
+    int i1, i2, i3, i4;
+    char dummy;
+    extern int sendsock; /* from net.c:115 */
+
+    source.sin_family = AF_INET;
+    source.sin_port = 0;
+
+    if(sscanf(InterfaceAddress, "%u.%u.%u.%u%c", &i1, &i2, &i3, &i4, &dummy) != 4) {
+      printf("mtr: bad interface address: %s\n", InterfaceAddress);
+      exit(1);
+    } else {
+      unsigned char*ptr;
+      ptr = (unsigned char*)&source.sin_addr;
+      ptr[0] = i1;
+      ptr[1] = i2;
+      ptr[2] = i3;
+      ptr[3] = i4;
+    }
+
+    if(bind(sendsock, (struct sockaddr*)&source, sizeof(source)) == -1) {
+      perror("mtr: failed to bind to interface");
+      exit(1);
+    }
+  }
+  
   host = gethostbyname(Hostname);
   if(host == NULL) {
 #ifndef NO_HERROR
