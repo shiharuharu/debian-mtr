@@ -1,3 +1,15 @@
+mtr (0.69-3) unstable; urgency=low
+
+  * Added check for __res_mkquery to build on amd64,
+    closes: #166613, #254089, #257981, #354342
+  * Uppercased initial letter of menu title, closes: #320609
+  * Fixed manual page and PrintHelp function for -p/-s switcharoo,
+    closes: #305728
+  * DNS fix from Jarek Kaminski if no nameservers are configured,
+    closes: #301346
+
+ -- Robert Woodcock <rcw@debian.org>  Fri, 03 Mar 2006 15:16:27 -0800
+
 mtr (0.69-2) unstable; urgency=low
 
   * Added upstream source location to copyright file, closes #312670

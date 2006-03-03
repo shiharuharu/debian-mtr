@@ -1228,7 +1228,7 @@ void dns_ack(void)
 	if ( addrcmp( (void *) &(_res.nsaddr_list[i].sin_addr),
 		      (void *) &(from4->sin_addr), (int) AF_INET ) == 0 ||
 	     addrcmp( (void *) &(_res.nsaddr_list[i].sin_addr),
-		      (void *) &unspec_addr, (int) AF_INET ) != 0 )	/* 0.0.0.0 replies as 127.0.0.1 */
+		      (void *) &unspec_addr, (int) AF_INET ) == 0 )	/* 0.0.0.0 replies as 127.0.0.1 */
 	  break;
     } else
       for (i = 0;i < _res.nscount;i++)
