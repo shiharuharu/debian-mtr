@@ -51,7 +51,7 @@ binary-arch: build
 	dh_installmenu -pmtr-tiny
 #	dh_installinit -pmtr-tiny
 #	dh_installcron -pmtr-tiny
-	dh_installmanpages -pmtr-tiny
+	dh_installman -pmtr-tiny mtr.8
 #	dh_undocumented -pmtr-tiny
 	dh_installchangelogs -pmtr-tiny NEWS
 	dh_strip -pmtr-tiny
@@ -74,7 +74,7 @@ binary-arch: build
 	dh_installmenu -pmtr
 #	dh_installinit -pgtk
 #	dh_installcron -pmtr
-	dh_installmanpages -pmtr
+	dh_installman -pmtr mtr.8
 #	dh_undocumented -pmtr
 	dh_installchangelogs -pmtr NEWS
 	dh_strip -pmtr

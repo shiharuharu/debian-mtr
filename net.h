@@ -117,6 +117,3 @@ extern unsigned char fld_active[];
 extern char available_options[];
 
 ip_t unspec_addr;
-
-FILE *ADDRCMP;
-int i;

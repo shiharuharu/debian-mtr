@@ -51,42 +51,27 @@ m4trace:configure.in:1: -1- AC_SUBST([ECHO_C])
 m4trace:configure.in:1: -1- AC_SUBST([ECHO_N])
 m4trace:configure.in:1: -1- AC_SUBST([ECHO_T])
 m4trace:configure.in:1: -1- AC_SUBST([LIBS])
-m4trace:configure.in:2: -1- AM_INIT_AUTOMAKE([mtr], [0.68])
+m4trace:configure.in:2: -1- AM_INIT_AUTOMAKE([mtr], [0.70])
+m4trace:configure.in:2: -1- AM_AUTOMAKE_VERSION([1.4-p6])
 m4trace:configure.in:2: -1- AC_PROG_INSTALL
 m4trace:configure.in:2: -1- AC_SUBST([INSTALL_PROGRAM])
 m4trace:configure.in:2: -1- AC_SUBST([INSTALL_SCRIPT])
 m4trace:configure.in:2: -1- AC_SUBST([INSTALL_DATA])
-m4trace:configure.in:2: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: source directory already configured; run \"make distclean\" there first], [aclocal.m4:102: AM_INIT_AUTOMAKE is expanded from...
-configure.in:2: the top level])
-m4trace:configure.in:2: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: source directory already configured; run \"make distclean\" there first], [aclocal.m4:102: AM_INIT_AUTOMAKE is expanded from...
-configure.in:2: the top level])
 m4trace:configure.in:2: -1- AC_SUBST([PACKAGE])
 m4trace:configure.in:2: -1- AC_SUBST([VERSION])
-m4trace:configure.in:2: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE])
-m4trace:configure.in:2: -1- AH_OUTPUT([PACKAGE], [/* Name of package */
+m4trace:configure.in:2: -2- AC_DEFINE_TRACE_LITERAL([PACKAGE])
+m4trace:configure.in:2: -2- AH_OUTPUT([PACKAGE], [/* Name of package */
 #undef PACKAGE])
-m4trace:configure.in:2: -1- AC_DEFINE_TRACE_LITERAL([VERSION])
-m4trace:configure.in:2: -1- AH_OUTPUT([VERSION], [/* Version number of package */
+m4trace:configure.in:2: -2- AC_DEFINE_TRACE_LITERAL([VERSION])
+m4trace:configure.in:2: -2- AH_OUTPUT([VERSION], [/* Version number of package */
 #undef VERSION])
-m4trace:configure.in:2: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS])
-m4trace:configure.in:2: -1- AC_SUBST([EXEEXT])
-m4trace:configure.in:2: -1- AC_SUBST([OBJEXT])
 m4trace:configure.in:2: -1- AC_SUBST([ACLOCAL])
 m4trace:configure.in:2: -1- AC_SUBST([AUTOCONF])
 m4trace:configure.in:2: -1- AC_SUBST([AUTOMAKE])
 m4trace:configure.in:2: -1- AC_SUBST([AUTOHEADER])
 m4trace:configure.in:2: -1- AC_SUBST([MAKEINFO])
-m4trace:configure.in:2: -1- AC_SUBST([AMTAR])
-m4trace:configure.in:2: -1- AC_SUBST([install_sh])
-m4trace:configure.in:2: -1- AC_SUBST([INSTALL_STRIP_PROGRAM])
-m4trace:configure.in:2: -1- AC_PROG_AWK
-m4trace:configure.in:2: -1- AC_SUBST([AWK])
 m4trace:configure.in:2: -1- AC_PROG_MAKE_SET
 m4trace:configure.in:2: -1- AC_SUBST([SET_MAKE])
-m4trace:configure.in:2: -1- AM_CONDITIONAL([AMDEP], [test "x$enable_dependency_tracking" != xno])
-m4trace:configure.in:2: -1- AC_SUBST([AMDEP_TRUE])
-m4trace:configure.in:2: -1- AC_SUBST([AMDEP_FALSE])
-m4trace:configure.in:2: -1- AC_SUBST([DEPDIR])
 m4trace:configure.in:5: -1- AC_SUBST([GTK_OBJ])
 m4trace:configure.in:6: -1- AC_SUBST([CURSES_OBJ])
 m4trace:configure.in:11: -1- AC_PROG_CC
@@ -103,22 +88,6 @@ m4trace:configure.in:11: -1- AC_SUBST([CC])
 m4trace:configure.in:11: -1- AC_SUBST([ac_ct_CC])
 m4trace:configure.in:11: -1- AC_SUBST([EXEEXT], [$ac_cv_exeext])
 m4trace:configure.in:11: -1- AC_SUBST([OBJEXT], [$ac_cv_objext])
-m4trace:configure.in:11: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
-You should run autoupdate.], [autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
-aclocal.m4:424: AM_OUTPUT_DEPENDENCY_COMMANDS is expanded from...
-configure.in:11: AM_OUTPUT_DEPENDENCY_COMMANDS is required by...
-aclocal.m4:338: _AM_DEPENDENCIES is expanded from...
-configure.in:11: the top level])
-m4trace:configure.in:11: -3- _m4_warn([obsolete], [The macro `_AC_OUTPUT_COMMANDS_CNT' is obsolete.
-You should run autoupdate.], [autoconf/status.m4:321: _AC_OUTPUT_COMMANDS_CNT is expanded from...
-autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
-aclocal.m4:424: AM_OUTPUT_DEPENDENCY_COMMANDS is expanded from...
-configure.in:11: AM_OUTPUT_DEPENDENCY_COMMANDS is required by...
-aclocal.m4:338: _AM_DEPENDENCIES is expanded from...
-configure.in:11: the top level])
-m4trace:configure.in:11: -1- AC_SUBST([am__include])
-m4trace:configure.in:11: -1- AC_SUBST([am__quote])
-m4trace:configure.in:11: -1- AC_SUBST([CCDEPMODE])
 m4trace:configure.in:13: -1- AC_HEADER_STDC
 m4trace:configure.in:13: -1- AC_PROG_CPP
 m4trace:configure.in:13: -1- AC_SUBST([CPP])
@@ -440,53 +409,53 @@ echo "$as_me: error: No math library found" >&2;}
 m4trace:configure.in:41: -1- AH_OUTPUT([HAVE_LIBM], [/* Define to 1 if you have the `m\' library (-lm). */
 #undef HAVE_LIBM])
 m4trace:configure.in:41: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBM])
-m4trace:configure.in:57: -2- AC_DEFINE_TRACE_LITERAL([NO_GTK])
-m4trace:configure.in:58: -1- AC_SUBST([PKG_CONFIG], [$ac_cv_path_PKG_CONFIG])
-m4trace:configure.in:58: -1- _m4_warn([obsolete], [The macro `AC_TRY_RUN' is obsolete.
+m4trace:configure.in:61: -2- AC_DEFINE_TRACE_LITERAL([NO_GTK])
+m4trace:configure.in:62: -1- AC_SUBST([PKG_CONFIG], [$ac_cv_path_PKG_CONFIG])
+m4trace:configure.in:62: -1- _m4_warn([obsolete], [The macro `AC_TRY_RUN' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2289: AC_TRY_RUN is expanded from...
-aclocal.m4:689: AM_PATH_GTK_2_0 is expanded from...
-configure.in:58: the top level])
-m4trace:configure.in:58: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+aclocal.m4:1149: AM_PATH_GTK_2_0 is expanded from...
+configure.in:62: the top level])
+m4trace:configure.in:62: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2223: AC_TRY_LINK is expanded from...
-aclocal.m4:689: AM_PATH_GTK_2_0 is expanded from...
-configure.in:58: the top level])
-m4trace:configure.in:58: -1- AC_SUBST([GTK_CFLAGS])
-m4trace:configure.in:58: -1- AC_SUBST([GTK_LIBS])
-m4trace:configure.in:63: -2- AC_DEFINE_TRACE_LITERAL([NO_GTK])
-m4trace:configure.in:64: -1- AC_SUBST([GTK_CONFIG], [$ac_cv_path_GTK_CONFIG])
-m4trace:configure.in:64: -1- _m4_warn([obsolete], [The macro `AC_TRY_RUN' is obsolete.
+aclocal.m4:1149: AM_PATH_GTK_2_0 is expanded from...
+configure.in:62: the top level])
+m4trace:configure.in:62: -1- AC_SUBST([GTK_CFLAGS])
+m4trace:configure.in:62: -1- AC_SUBST([GTK_LIBS])
+m4trace:configure.in:67: -2- AC_DEFINE_TRACE_LITERAL([NO_GTK])
+m4trace:configure.in:68: -1- AC_SUBST([GTK_CONFIG], [$ac_cv_path_GTK_CONFIG])
+m4trace:configure.in:68: -1- _m4_warn([obsolete], [The macro `AC_TRY_RUN' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2289: AC_TRY_RUN is expanded from...
-aclocal.m4:884: AM_PATH_GTK is expanded from...
-configure.in:64: the top level])
-m4trace:configure.in:64: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+aclocal.m4:1344: AM_PATH_GTK is expanded from...
+configure.in:68: the top level])
+m4trace:configure.in:68: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2223: AC_TRY_LINK is expanded from...
-aclocal.m4:884: AM_PATH_GTK is expanded from...
-configure.in:64: the top level])
-m4trace:configure.in:64: -1- AC_SUBST([GTK_CFLAGS])
-m4trace:configure.in:64: -1- AC_SUBST([GTK_LIBS])
-m4trace:configure.in:67: -1- AC_DEFINE_TRACE_LITERAL([NO_GTK])
-m4trace:configure.in:72: -2- AC_CHECK_LIB([socket], [socket], [], [{ { echo "$as_me:$LINENO: error: No socket library found" >&5
+aclocal.m4:1344: AM_PATH_GTK is expanded from...
+configure.in:68: the top level])
+m4trace:configure.in:68: -1- AC_SUBST([GTK_CFLAGS])
+m4trace:configure.in:68: -1- AC_SUBST([GTK_LIBS])
+m4trace:configure.in:71: -1- AC_DEFINE_TRACE_LITERAL([NO_GTK])
+m4trace:configure.in:76: -2- AC_CHECK_LIB([socket], [socket], [], [{ { echo "$as_me:$LINENO: error: No socket library found" >&5
 echo "$as_me: error: No socket library found" >&2;}
    { (exit 1); exit 1; }; }])
-m4trace:configure.in:72: -2- AH_OUTPUT([HAVE_LIBSOCKET], [/* Define to 1 if you have the `socket\' library (-lsocket). */
+m4trace:configure.in:76: -2- AH_OUTPUT([HAVE_LIBSOCKET], [/* Define to 1 if you have the `socket\' library (-lsocket). */
 #undef HAVE_LIBSOCKET])
-m4trace:configure.in:72: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBSOCKET])
-m4trace:configure.in:75: -2- AC_CHECK_LIB([nsl], [gethostbyname], [], [{ { echo "$as_me:$LINENO: error: No nameservice library found" >&5
+m4trace:configure.in:76: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBSOCKET])
+m4trace:configure.in:79: -2- AC_CHECK_LIB([nsl], [gethostbyname], [], [{ { echo "$as_me:$LINENO: error: No nameservice library found" >&5
 echo "$as_me: error: No nameservice library found" >&2;}
    { (exit 1); exit 1; }; }])
-m4trace:configure.in:75: -2- AH_OUTPUT([HAVE_LIBNSL], [/* Define to 1 if you have the `nsl\' library (-lnsl). */
+m4trace:configure.in:79: -2- AH_OUTPUT([HAVE_LIBNSL], [/* Define to 1 if you have the `nsl\' library (-lnsl). */
 #undef HAVE_LIBNSL])
-m4trace:configure.in:75: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBNSL])
-m4trace:configure.in:81: -1- AC_CHECK_FUNCS([seteuid])
-m4trace:configure.in:81: -1- AH_OUTPUT([HAVE_SETEUID], [/* Define to 1 if you have the `seteuid\' function. */
+m4trace:configure.in:79: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBNSL])
+m4trace:configure.in:85: -1- AC_CHECK_FUNCS([seteuid])
+m4trace:configure.in:85: -1- AH_OUTPUT([HAVE_SETEUID], [/* Define to 1 if you have the `seteuid\' function. */
 #undef HAVE_SETEUID])
-m4trace:configure.in:86: -3- AC_CHECK_LIB([resolv], [res_mkquery], [], [{ { echo "$as_me:$LINENO: error: No resolver library found" >&5
+m4trace:configure.in:90: -3- AC_CHECK_LIB([resolv], [res_mkquery], [], [{ { echo "$as_me:$LINENO: error: No resolver library found" >&5
 echo "$as_me: error: No resolver library found" >&2;}
    { (exit 1); exit 1; }; }])
-m4trace:configure.in:86: -3- AH_OUTPUT([HAVE_LIBRESOLV], [/* Define to 1 if you have the `resolv\' library (-lresolv). */
+m4trace:configure.in:90: -3- AH_OUTPUT([HAVE_LIBRESOLV], [/* Define to 1 if you have the `resolv\' library (-lresolv). */
 #undef HAVE_LIBRESOLV])
-m4trace:configure.in:86: -3- AC_DEFINE_TRACE_LITERAL([HAVE_LIBRESOLV])
-m4trace:configure.in:86: -2- AC_CHECK_LIB([bind], [res_mkquery], [], [
+m4trace:configure.in:90: -3- AC_DEFINE_TRACE_LITERAL([HAVE_LIBRESOLV])
+m4trace:configure.in:90: -2- AC_CHECK_LIB([bind], [res_mkquery], [], [
 echo "$as_me:$LINENO: checking for res_mkquery in -lresolv" >&5
 echo $ECHO_N "checking for res_mkquery in -lresolv... $ECHO_C" >&6
 if test "${ac_cv_lib_resolv_res_mkquery+set}" = set; then
@@ -563,29 +532,35 @@ echo "$as_me: error: No resolver library found" >&2;}
    { (exit 1); exit 1; }; }
 fi
 ])
-m4trace:configure.in:86: -2- AH_OUTPUT([HAVE_LIBBIND], [/* Define to 1 if you have the `bind\' library (-lbind). */
+m4trace:configure.in:90: -2- AH_OUTPUT([HAVE_LIBBIND], [/* Define to 1 if you have the `bind\' library (-lbind). */
 #undef HAVE_LIBBIND])
-m4trace:configure.in:86: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBBIND])
-m4trace:configure.in:88: -2- AC_DEFINE_TRACE_LITERAL([NO_HERROR])
-m4trace:configure.in:89: -2- AC_DEFINE_TRACE_LITERAL([NO_STRERROR])
-m4trace:configure.in:95: -1- _m4_warn([obsolete], [The macro `ac_cv_prog_gcc' is obsolete.
+m4trace:configure.in:90: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBBIND])
+m4trace:configure.in:92: -2- AC_DEFINE_TRACE_LITERAL([NO_HERROR])
+m4trace:configure.in:93: -2- AC_DEFINE_TRACE_LITERAL([NO_STRERROR])
+m4trace:configure.in:98: -1- AC_DEFINE_TRACE_LITERAL([ENABLE_IPV6])
+m4trace:configure.in:98: -1- AH_OUTPUT([ENABLE_IPV6], [/* Define to enable IPv6 */
+#undef ENABLE_IPV6])
+m4trace:configure.in:103: -1- _m4_warn([obsolete], [The macro `ac_cv_prog_gcc' is obsolete.
 You should run autoupdate.], [autoconf/c.m4:440: ac_cv_prog_gcc is expanded from...
-configure.in:95: the top level])
-m4trace:configure.in:105: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:2180: AC_TRY_COMPILE is expanded from...
-configure.in:105: the top level])
+configure.in:103: the top level])
 m4trace:configure.in:113: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2180: AC_TRY_COMPILE is expanded from...
 configure.in:113: the top level])
-m4trace:configure.in:134: -2- _m4_warn([syntax], [do not use m4_patsubst: use patsubst or m4_bpatsubst], [aclocal.m4:938: AM_CONFIG_HEADER is expanded from...
-configure.in:134: the top level])
-m4trace:configure.in:134: -1- AC_CONFIG_HEADERS([config.h], [# update the timestamp
-echo timestamp >"AS_ESCAPE(_AM_DIRNAME(config.h))/stamp-h1"
-])
-m4trace:configure.in:135: -1- AC_CONFIG_FILES([Makefile img/Makefile])
-m4trace:configure.in:135: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.in:121: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
+You should run autoupdate.], [autoconf/general.m4:2180: AC_TRY_COMPILE is expanded from...
+configure.in:121: the top level])
+m4trace:configure.in:142: -1- AC_CONFIG_HEADERS([config.h])
+m4trace:configure.in:142: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
+You should run autoupdate.], [autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
+aclocal.m4:1367: AM_CONFIG_HEADER is expanded from...
+configure.in:142: the top level])
+m4trace:configure.in:142: -3- _m4_warn([obsolete], [The macro `_AC_OUTPUT_COMMANDS_CNT' is obsolete.
+You should run autoupdate.], [autoconf/status.m4:321: _AC_OUTPUT_COMMANDS_CNT is expanded from...
+autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
+aclocal.m4:1367: AM_CONFIG_HEADER is expanded from...
+configure.in:142: the top level])
+m4trace:configure.in:143: -1- AC_CONFIG_FILES([Makefile img/Makefile])
+m4trace:configure.in:143: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:135: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:135: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:135: -3- _m4_warn([syntax], [do not use m4_regexp: use regexp or m4_bregexp], [aclocal.m4:951: _AM_DIRNAME is expanded from...
-configure.in:135: the top level])
+m4trace:configure.in:143: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:143: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])

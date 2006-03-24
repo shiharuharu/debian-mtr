@@ -1,3 +1,9 @@
+mtr (0.70-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Robert Woodcock <rcw@debian.org>  Thu, 23 Mar 2006 17:31:28 -0800
+
 mtr (0.69-4) unstable; urgency=low
 
   * Woops, forgot to run autoconf for the configure.in change in -3,
