@@ -6,11 +6,27 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+# From /usr/share/doc/autotools-dev/README.Debian.gz:
+export DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+# FOR AUTOCONF 2.52 AND NEWER ONLY
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+  confflags += --build $(DEB_HOST_GNU_TYPE)
+else
+  confflags += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
+endif
+
 build: build-stamp
 build-stamp:
 	dh_testdir
 
-	mkdir mtr && cd mtr && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --enable-gtk2
+
+	touch configure.in && \
+	touch aclocal.m4 && \
+	touch configure
+
+	mkdir mtr && cd mtr && ../configure $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --enable-gtk2
 	make -C mtr
 
 	mkdir mtr-tiny && cd mtr-tiny && ../configure --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --without-gtk
@@ -44,7 +60,6 @@ binary-arch: build
 	# Add here commands to install the files into debian/tmp
 	$(MAKE) -C mtr-tiny prefix=`pwd`/debian/mtr-tiny/usr install
 	mv mtr-tiny/debian/tmp/usr/bin/mtr debian/mtr-tiny/usr/bin/
-#	rmdir debian/tmp/usr/sbin
 
 	dh_installdocs -pmtr-tiny
 #	dh_installexamples -mtr-ptiny

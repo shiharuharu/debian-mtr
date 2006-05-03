@@ -51,7 +51,7 @@ m4trace:configure.in:1: -1- AC_SUBST([ECHO_C])
 m4trace:configure.in:1: -1- AC_SUBST([ECHO_N])
 m4trace:configure.in:1: -1- AC_SUBST([ECHO_T])
 m4trace:configure.in:1: -1- AC_SUBST([LIBS])
-m4trace:configure.in:2: -1- AM_INIT_AUTOMAKE([mtr], [0.70])
+m4trace:configure.in:2: -1- AM_INIT_AUTOMAKE([mtr], [0.71])
 m4trace:configure.in:2: -1- AM_AUTOMAKE_VERSION([1.4-p6])
 m4trace:configure.in:2: -1- AC_PROG_INSTALL
 m4trace:configure.in:2: -1- AC_SUBST([INSTALL_PROGRAM])
@@ -449,13 +449,93 @@ m4trace:configure.in:79: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBNSL])
 m4trace:configure.in:85: -1- AC_CHECK_FUNCS([seteuid])
 m4trace:configure.in:85: -1- AH_OUTPUT([HAVE_SETEUID], [/* Define to 1 if you have the `seteuid\' function. */
 #undef HAVE_SETEUID])
-m4trace:configure.in:90: -3- AC_CHECK_LIB([resolv], [res_mkquery], [], [{ { echo "$as_me:$LINENO: error: No resolver library found" >&5
+m4trace:configure.in:91: -4- AC_CHECK_LIB([resolv], [__res_mkquery], [], [{ { echo "$as_me:$LINENO: error: No resolver library found" >&5
 echo "$as_me: error: No resolver library found" >&2;}
    { (exit 1); exit 1; }; }])
-m4trace:configure.in:90: -3- AH_OUTPUT([HAVE_LIBRESOLV], [/* Define to 1 if you have the `resolv\' library (-lresolv). */
+m4trace:configure.in:91: -4- AH_OUTPUT([HAVE_LIBRESOLV], [/* Define to 1 if you have the `resolv\' library (-lresolv). */
 #undef HAVE_LIBRESOLV])
-m4trace:configure.in:90: -3- AC_DEFINE_TRACE_LITERAL([HAVE_LIBRESOLV])
-m4trace:configure.in:90: -2- AC_CHECK_LIB([bind], [res_mkquery], [], [
+m4trace:configure.in:91: -4- AC_DEFINE_TRACE_LITERAL([HAVE_LIBRESOLV])
+m4trace:configure.in:91: -3- AC_CHECK_LIB([resolv], [res_mkquery], [], [
+echo "$as_me:$LINENO: checking for __res_mkquery in -lresolv" >&5
+echo $ECHO_N "checking for __res_mkquery in -lresolv... $ECHO_C" >&6
+if test "${ac_cv_lib_resolv___res_mkquery+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lresolv  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char __res_mkquery ();
+int
+main ()
+{
+__res_mkquery ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_resolv___res_mkquery=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_lib_resolv___res_mkquery=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:$LINENO: result: $ac_cv_lib_resolv___res_mkquery" >&5
+echo "${ECHO_T}$ac_cv_lib_resolv___res_mkquery" >&6
+if test $ac_cv_lib_resolv___res_mkquery = yes; then
+  cat >>confdefs.h <<_ACEOF
+@%:@define HAVE_LIBRESOLV 1
+_ACEOF
+
+  LIBS="-lresolv $LIBS"
+
+else
+  { { echo "$as_me:$LINENO: error: No resolver library found" >&5
+echo "$as_me: error: No resolver library found" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+])
+m4trace:configure.in:91: -3- AH_OUTPUT([HAVE_LIBRESOLV], [/* Define to 1 if you have the `resolv\' library (-lresolv). */
+#undef HAVE_LIBRESOLV])
+m4trace:configure.in:91: -3- AC_DEFINE_TRACE_LITERAL([HAVE_LIBRESOLV])
+m4trace:configure.in:91: -2- AC_CHECK_LIB([bind], [res_mkquery], [], [
 echo "$as_me:$LINENO: checking for res_mkquery in -lresolv" >&5
 echo $ECHO_N "checking for res_mkquery in -lresolv... $ECHO_C" >&6
 if test "${ac_cv_lib_resolv_res_mkquery+set}" = set; then
@@ -527,40 +607,114 @@ _ACEOF
   LIBS="-lresolv $LIBS"
 
 else
+  
+echo "$as_me:$LINENO: checking for __res_mkquery in -lresolv" >&5
+echo $ECHO_N "checking for __res_mkquery in -lresolv... $ECHO_C" >&6
+if test "${ac_cv_lib_resolv___res_mkquery+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lresolv  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char __res_mkquery ();
+int
+main ()
+{
+__res_mkquery ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_resolv___res_mkquery=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_lib_resolv___res_mkquery=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:$LINENO: result: $ac_cv_lib_resolv___res_mkquery" >&5
+echo "${ECHO_T}$ac_cv_lib_resolv___res_mkquery" >&6
+if test $ac_cv_lib_resolv___res_mkquery = yes; then
+  cat >>confdefs.h <<_ACEOF
+@%:@define HAVE_LIBRESOLV 1
+_ACEOF
+
+  LIBS="-lresolv $LIBS"
+
+else
   { { echo "$as_me:$LINENO: error: No resolver library found" >&5
 echo "$as_me: error: No resolver library found" >&2;}
    { (exit 1); exit 1; }; }
 fi
+
+fi
 ])
-m4trace:configure.in:90: -2- AH_OUTPUT([HAVE_LIBBIND], [/* Define to 1 if you have the `bind\' library (-lbind). */
+m4trace:configure.in:91: -2- AH_OUTPUT([HAVE_LIBBIND], [/* Define to 1 if you have the `bind\' library (-lbind). */
 #undef HAVE_LIBBIND])
-m4trace:configure.in:90: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBBIND])
-m4trace:configure.in:92: -2- AC_DEFINE_TRACE_LITERAL([NO_HERROR])
-m4trace:configure.in:93: -2- AC_DEFINE_TRACE_LITERAL([NO_STRERROR])
-m4trace:configure.in:98: -1- AC_DEFINE_TRACE_LITERAL([ENABLE_IPV6])
-m4trace:configure.in:98: -1- AH_OUTPUT([ENABLE_IPV6], [/* Define to enable IPv6 */
+m4trace:configure.in:91: -2- AC_DEFINE_TRACE_LITERAL([HAVE_LIBBIND])
+m4trace:configure.in:94: -2- AC_DEFINE_TRACE_LITERAL([NO_HERROR])
+m4trace:configure.in:95: -2- AC_DEFINE_TRACE_LITERAL([NO_STRERROR])
+m4trace:configure.in:100: -1- AC_DEFINE_TRACE_LITERAL([ENABLE_IPV6])
+m4trace:configure.in:100: -1- AH_OUTPUT([ENABLE_IPV6], [/* Define to enable IPv6 */
 #undef ENABLE_IPV6])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [The macro `ac_cv_prog_gcc' is obsolete.
+m4trace:configure.in:105: -1- _m4_warn([obsolete], [The macro `ac_cv_prog_gcc' is obsolete.
 You should run autoupdate.], [autoconf/c.m4:440: ac_cv_prog_gcc is expanded from...
-configure.in:103: the top level])
-m4trace:configure.in:113: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
+configure.in:105: the top level])
+m4trace:configure.in:115: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2180: AC_TRY_COMPILE is expanded from...
-configure.in:113: the top level])
-m4trace:configure.in:121: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
+configure.in:115: the top level])
+m4trace:configure.in:123: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:2180: AC_TRY_COMPILE is expanded from...
-configure.in:121: the top level])
-m4trace:configure.in:142: -1- AC_CONFIG_HEADERS([config.h])
-m4trace:configure.in:142: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
+configure.in:123: the top level])
+m4trace:configure.in:144: -1- AC_CONFIG_HEADERS([config.h])
+m4trace:configure.in:144: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
 You should run autoupdate.], [autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
 aclocal.m4:1367: AM_CONFIG_HEADER is expanded from...
-configure.in:142: the top level])
-m4trace:configure.in:142: -3- _m4_warn([obsolete], [The macro `_AC_OUTPUT_COMMANDS_CNT' is obsolete.
+configure.in:144: the top level])
+m4trace:configure.in:144: -3- _m4_warn([obsolete], [The macro `_AC_OUTPUT_COMMANDS_CNT' is obsolete.
 You should run autoupdate.], [autoconf/status.m4:321: _AC_OUTPUT_COMMANDS_CNT is expanded from...
 autoconf/status.m4:318: AC_OUTPUT_COMMANDS is expanded from...
 aclocal.m4:1367: AM_CONFIG_HEADER is expanded from...
-configure.in:142: the top level])
-m4trace:configure.in:143: -1- AC_CONFIG_FILES([Makefile img/Makefile])
-m4trace:configure.in:143: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+configure.in:144: the top level])
+m4trace:configure.in:145: -1- AC_CONFIG_FILES([Makefile img/Makefile])
+m4trace:configure.in:145: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:143: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:143: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:145: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:145: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
