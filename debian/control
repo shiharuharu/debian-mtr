@@ -2,7 +2,6 @@ Source: mtr
 Section: net
 Priority: standard
 Maintainer: Robert Woodcock <rcw@debian.org>
-Uploaders: Sebastian Harl <sh@tokkee.org>
 Standards-Version: 3.6.1
 Build-Depends: libncurses-dev, debhelper (>= 2.2.12), libgtk2.0-dev
 
