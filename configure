@@ -1581,7 +1581,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=mtr
- VERSION=0.71
+ VERSION=0.72
 
 
 cat >>confdefs.h <<_ACEOF
