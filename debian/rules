@@ -82,7 +82,7 @@ binary-arch: build
 
 	dh_installdirs -pmtr
 	$(MAKE) -C mtr prefix=`pwd`/debian/mtr/usr install
-	mv mtr/debian/tmp/usr/bin/mtr debian/tmp/usr/bin/
+	mv mtr/debian/tmp/usr/bin/mtr debian/mtr/usr/bin/
 
 	dh_installdocs -pmtr
 #	dh_installexamples -pmtr

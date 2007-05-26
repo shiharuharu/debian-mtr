@@ -83,7 +83,9 @@ void select_loop(void) {
     if(netfd >= maxfd) maxfd = netfd + 1;
 
     do {
-      if(anyset || paused) {
+      if(paused) {
+        rv = select(maxfd, (void *)&readfd, NULL, NULL, NULL);
+      } else if(anyset) {
 	selecttime.tv_sec = 0;
 	selecttime.tv_usec = 0;
       

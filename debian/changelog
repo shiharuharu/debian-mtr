@@ -1,3 +1,12 @@
+mtr (0.72-2) unstable; urgency=low
+
+  * Reupload to unstable since etch is released.
+  * Include no-busy-wait patch in #156378,
+    closes: #156378, #259906, #348650, #384444
+  * Use debhelper compatibility level 5
+
+ -- Robert Woodcock <rcw@debian.org>  Fri, 25 May 2007 21:42:04 -0700
+
 mtr (0.72-1) experimental; urgency=low
 
   * New upstream version fixes IPv6 reverse DNS lookups for 8-bit

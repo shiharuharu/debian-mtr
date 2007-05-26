@@ -3,12 +3,12 @@ Section: net
 Priority: standard
 Maintainer: Robert Woodcock <rcw@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: libncurses-dev, debhelper (>= 2.2.12), libgtk2.0-dev
+Build-Depends: libncurses-dev, debhelper (>= 5), libgtk2.0-dev
 
 Package: mtr
 Architecture: any
 Priority: extra
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: suidmanager (<< 0.50), mtr-tiny
 Replaces: mtr-tiny
 Description: Full screen ncurses and X11 traceroute tool
