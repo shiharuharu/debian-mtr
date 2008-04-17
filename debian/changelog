@@ -1,3 +1,9 @@
+mtr (0.73-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Robert Woodcock <rcw@debian.org>  Wed, 16 Apr 2008 19:38:12 -0700
+
 mtr (0.72-2) unstable; urgency=low
 
   * Reupload to unstable since etch is released.
