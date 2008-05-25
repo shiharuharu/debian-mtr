@@ -1,3 +1,11 @@
+mtr (0.71-2etch1) stable-security; urgency=high
+
+  * Non-maintainer upload by the security team
+  * Fix possible buffer overflow in split.c by using snprintf, instead
+    of sprintf Fixes: CVE-2008-2357
+
+ -- Steffen Joeris <white@debian.org>  Sun, 25 May 2008 04:07:45 +0000
+
 mtr (0.71-2) unstable; urgency=low
 
   * Run autoreconf --force --install to allow building without automake,
