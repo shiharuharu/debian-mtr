@@ -1,3 +1,12 @@
+mtr (0.75-1) unstable; urgency=low
+
+  * New upstream version with rewritten GTK+ code
+    closes: #65005, #30263
+  * Bumped Standards-Version to 3.8.0
+  * Lintian cleanups
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 21 Sep 2008 10:39:10 -0700
+
 mtr (0.73-1) unstable; urgency=low
 
   * New upstream version
