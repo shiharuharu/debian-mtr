@@ -38,7 +38,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-	rm -r mtr mtr-tiny
+	rm -rf mtr mtr-tiny
 
 	# Add here commands to clean up after the build process.
 	$(MAKE) distclean

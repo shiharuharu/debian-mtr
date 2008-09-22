@@ -1,3 +1,9 @@
+mtr (0.75-2) unstable; urgency=low
+
+  * Use rm -f in rules clean target where necessary, closes: #499789
+ 
+ -- Robert Woodcock <rcw@debian.org>  Mon, 22 Sep 2008 07:30:21 -0700
+
 mtr (0.75-1) unstable; urgency=low
 
   * New upstream version with rewritten GTK+ code
