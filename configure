@@ -2039,7 +2039,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=mtr
- VERSION=0.75
+ VERSION=0.80
 
 
 cat >>confdefs.h <<_ACEOF
@@ -5691,7 +5691,9 @@ fi
 done
 
 
-for ac_header in sys/xti.h
+
+
+for ac_header in socket.h sys/socket.h sys/xti.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -6485,7 +6487,7 @@ fi
     no_gtk=yes
   fi
 
-  min_gtk_version=2.4.0
+  min_gtk_version=2.6.0
   { echo "$as_me:$LINENO: checking for GTK+ - version >= $min_gtk_version" >&5
 echo $ECHO_N "checking for GTK+ - version >= $min_gtk_version... $ECHO_C" >&6; }
 
@@ -7835,6 +7837,12 @@ cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
 #include <netinet/in.h>
+#ifdef HAVE_SOCKET_H
+#include <socket.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
 
 
 typedef socklen_t ac__type_new_;
@@ -7956,7 +7964,45 @@ fi
 echo $ECHO_N "checking for C flags to get more warnings... $ECHO_C" >&6; }
 ac_save_CFLAGS="$CFLAGS"
 if test "x$ac_cv_c_compiler_gnu" = "xyes" ; then
-    warning_CFLAGS="-Wall -Wno-pointer-sign"
+    warning_CFLAGS="-Wall"
+  # Check if compiler supports -Wno-pointer-sign and add it if supports
+  CFLAGS_saved="$CFLAGS"
+  CFLAGS="$CFLAGS -Wno-pointer-sign"
+  cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+ int foo;
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+   warning_CFLAGS="${warning_CFLAGS} -Wno-pointer-sign"
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS="$CFLAGS_saved"
 else
     case "$host_os" in
         irix*)

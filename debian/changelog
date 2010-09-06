@@ -1,3 +1,13 @@
+mtr (0.80-1) unstable; urgency=low
+
+  * New upstream version
+  * Add Homepage field to debian/control, closes: #314651
+  * Change Priority field to match that of the archive overrides,
+    closes: #416567
+  * Lintian cleanups
+
+ -- Robert Woodcock <rcw@debian.org>  Mon, 06 Sep 2010 16:53:54 -0700
+
 mtr (0.75-2) unstable; urgency=low
 
   * Use rm -f in rules clean target where necessary, closes: #499789
