@@ -1,3 +1,9 @@
+mtr (0.81-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Robert Woodcock <rcw@debian.org>  Sat, 26 Nov 2011 20:15:42 -0800
+
 mtr (0.80-1) unstable; urgency=low
 
   * New upstream version
