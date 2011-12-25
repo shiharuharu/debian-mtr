@@ -1,3 +1,9 @@
+mtr (0.82-1) unstable; urgency=low
+
+  * New upstream version fixes FTBFS, closes: #650535
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 25 Dec 2011 09:40:19 -0800
+
 mtr (0.81-1) unstable; urgency=low
 
   * New upstream version
