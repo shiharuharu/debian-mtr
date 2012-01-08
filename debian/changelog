@@ -1,3 +1,10 @@
+mtr (0.82-2) unstable; urgency=low
+
+  * Add patch by Moritz Mühlenhoff to enable hardened build flags,
+    closes: #654117.
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 08 Jan 2012 08:05:30 -0800
+
 mtr (0.82-1) unstable; urgency=low
 
   * New upstream version fixes FTBFS, closes: #650535
