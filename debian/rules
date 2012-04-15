@@ -26,6 +26,10 @@ build-stamp:
 	touch aclocal.m4 && \
 	touch configure
 
+	aclocal && \
+	automake --foreign --include-deps Makefile && \
+	autoconf
+
 	mkdir mtr && cd mtr && ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --enable-gtk2
 	make -C mtr
 

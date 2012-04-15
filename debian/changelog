@@ -1,3 +1,10 @@
+mtr (0.82-3) unstable; urgency=low
+
+  * Added patch by Raúl Benencia to fix FTBFS by generating aclocal.m4
+    before compiling, closes: #662583
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 15 Apr 2012 14:40:05 -0700
+
 mtr (0.82-2) unstable; urgency=low
 
   * Add patch by Moritz Mühlenhoff to enable hardened build flags,
