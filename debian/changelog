@@ -1,6 +1,7 @@
-mtr (0.85-1) unstable; urgency=low
+mtr (0.85-2) unstable; urgency=low
 
-  * New upstream version, closes: #706816, #717727
+  * Added patch by Hideki Yamane to use autoreconf instead of
+    aclocal/automake/autoconf to fix FTBFS, closes: #725568
 
  -- Robert Woodcock <rcw@debian.org>  Wed, 24 Jul 2013 19:53:47 -0700
 
