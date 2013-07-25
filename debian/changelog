@@ -1,3 +1,9 @@
+mtr (0.85-1) unstable; urgency=low
+
+  * New upstream version, closes: #706816, #717727
+
+ -- Robert Woodcock <rcw@debian.org>  Wed, 24 Jul 2013 19:53:47 -0700
+
 mtr (0.82-3) unstable; urgency=low
 
   * Added patch by Raúl Benencia to fix FTBFS by generating aclocal.m4

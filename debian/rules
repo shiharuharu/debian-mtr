@@ -30,10 +30,10 @@ build-stamp:
 	automake --foreign --include-deps Makefile && \
 	autoconf
 
-	mkdir mtr && cd mtr && ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --enable-gtk2
+	mkdir mtr && cd mtr && CFLAGS=-I.. ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin
 	make -C mtr
 
-	mkdir mtr-tiny && cd mtr-tiny && ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --without-gtk
+	mkdir mtr-tiny && cd mtr-tiny && CFLAGS=-I.. ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --without-gtk --without-glib
 	make -C mtr-tiny
 
 	touch build-stamp
