@@ -24,7 +24,7 @@ endif
 nodist_mtr_SOURCES = version.h
 EXTRA_mtr_SOURCES = curses.c \
                     gtk.c
-DEFAULT_INCLUDES= $(GLIB_CFLAGS) -I. -I..
+DEFAULT_INCLUDES= $(GLIB_CFLAGS) -I.
 mtr_DEPENDENCIES = $(GTK_OBJ) $(CURSES_OBJ)
 mtr_LDFLAGS = $(GTK_OBJ) $(CURSES_OBJ)
 mtr_LDADD = $(GLIB_LIBS) $(RESOLV_LIBS)

@@ -1,3 +1,21 @@
+mtr (0.86-1~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+
+ -- Rhonda D'Vine <rhonda@debian.org>  Tue, 28 Jun 2016 18:11:28 +0200
+
+mtr (0.86-1) unstable; urgency=low
+
+  * Added patch from Andrew Suffield to use setcap instead of setuid,
+    closes: #768650  
+  * Additional changes by Rhonda D'Vine:
+    - New upstream release
+    - Bump debhelper compat to 9.
+    -  Use dh style debian/rules.
+    - Call ./bootstrap.sh before configure run.
+
+ -- Robert Woodcock <rcw@debian.org>  Sun, 06 Dec 2015 13:38:56 -0800
+
 mtr (0.85-3) unstable; urgency=low
 
   * Correct changelog entries for 0.85-1 and 0.85-2, closes: #742133
