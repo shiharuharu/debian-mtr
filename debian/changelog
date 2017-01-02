@@ -1,9 +1,3 @@
-mtr (0.87-1~bpo8+1) jessie-backports; urgency=medium
-
-  * Rebuild for jessie-backports.
-
- -- Rhonda D'Vine <rhonda@debian.org>  Tue, 11 Apr 2017 11:28:03 +0200
-
 mtr (0.87-1) unstable; urgency=medium
 
   * Correct typos in the postinst and package description
@@ -25,12 +19,6 @@ mtr (0.87-1) unstable; urgency=medium
   * wrap-and-sort -a.
 
  -- Robert Woodcock <rcw@debian.org>  Mon, 02 Jan 2017 10:17:13 -0800
-
-mtr (0.86-1~bpo8+1) jessie-backports; urgency=medium
-
-  * Rebuild for jessie-backports.
-
- -- Rhonda D'Vine <rhonda@debian.org>  Tue, 28 Jun 2016 18:11:28 +0200
 
 mtr (0.86-1) unstable; urgency=low
 

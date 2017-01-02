@@ -2,7 +2,7 @@ Source: mtr
 Section: net
 Priority: optional
 Maintainer: Robert Woodcock <rcw@debian.org>
-Uploaders: Samuel Henrique <samueloph@gmail.com>, Rhonda D'Vine <rhonda@debian.org>
+Uploaders: Samuel Henrique <samueloph@gmail.com>
 Standards-Version: 3.9.8
 Homepage: http://www.bitwizard.nl/mtr/
 Build-Depends: automake,
