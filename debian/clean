@@ -1,0 +1,6 @@
+compile
+config.h.in
+depcomp
+img/Makefile.in
+install-sh
+missing

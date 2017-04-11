@@ -1,7 +1,41 @@
+mtr (0.87-1~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+
+ -- Rhonda D'Vine <rhonda@debian.org>  Tue, 11 Apr 2017 11:28:03 +0200
+
+mtr (0.87-1) unstable; urgency=medium
+
+  * Correct typos in the postinst and package description
+
+  [ Samuel Henrique ]
+  * New upstream release.
+  * Bump DH level to 10.
+  * Bump Standards-Version to 3.9.8.
+  * Add myself as an uploader.
+  * d/clean: Create file and add build generated files.
+  * d/control:
+     - Add Vcs-* fields.
+     - Change all Conflicts entry to Breaks, as they're less strict.
+     - Remove Priority field from mtr-tiny, as its inherited from the
+       source package paragraph.
+  * d/copyright: Convert to DEP-5.
+  * d/source: Remove lintian-overrides, as they're not used.
+  * d/watch: Create file and watch official repository at github.
+  * wrap-and-sort -a.
+
+ -- Robert Woodcock <rcw@debian.org>  Mon, 02 Jan 2017 10:17:13 -0800
+
+mtr (0.86-1~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+
+ -- Rhonda D'Vine <rhonda@debian.org>  Tue, 28 Jun 2016 18:11:28 +0200
+
 mtr (0.86-1) unstable; urgency=low
 
   * Added patch from Andrew Suffield to use setcap instead of setuid,
-    closes: #768650  
+    closes: #768650
   * Additional changes by Rhonda D'Vine:
     - New upstream release
     - Bump debhelper compat to 9.
@@ -73,7 +107,7 @@ mtr (0.80-1) unstable; urgency=low
 mtr (0.75-2) unstable; urgency=low
 
   * Use rm -f in rules clean target where necessary, closes: #499789
- 
+
  -- Robert Woodcock <rcw@debian.org>  Mon, 22 Sep 2008 07:30:21 -0700
 
 mtr (0.75-1) unstable; urgency=low

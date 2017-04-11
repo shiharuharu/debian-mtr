@@ -194,7 +194,7 @@ typedef struct {
    byte databyte_a;
       /* rd:1           recursion desired
        * tc:1           truncated message
-       * aa:1           authoritive answer
+       * aa:1           authoritative answer
        * opcode:4       purpose of message
        * qr:1           response flag
        */
@@ -527,14 +527,9 @@ void dns_open(void)
   }
 #ifdef ENABLE_IPV6
   resfd6 = socket(AF_INET6, SOCK_DGRAM, 0);
-  if (resfd6 == -1) {
-    // consider making removing this warning. For now leave it in to see 
-    // new code activated. -- REW
-    fprintf(stderr,
-            "Unable to allocate IPv6 socket for nameserver communication: %s\n",
-	    strerror(errno));
-    //    exit(-1);
-  }
+  // If this fails, e.g. because the user has runtime-disabled IPV6, 
+  // the error can be ignored: the resfd6 is only used if it is 
+  // not the error return code. -- REW
 #endif
   option = 1;
   if (setsockopt(resfd,SOL_SOCKET,SO_BROADCAST,(char *)&option,sizeof(option))) {
@@ -1148,7 +1143,7 @@ void parserespacket(byte *s, int l)
       }
       for (rr = hp->ancount + hp->nscount + hp->arcount;rr;rr--) {
 	if (c > eob) {
-	  restell("Resolver error: Packet does not contain all specified resouce records.");
+	  restell("Resolver error: Packet does not contain all specified resource records.");
 	  return;
 	}
 	*namestring = '\0';
