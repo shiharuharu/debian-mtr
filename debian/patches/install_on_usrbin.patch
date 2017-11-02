@@ -1,0 +1,27 @@
+Description: Install on usr/bin instead of usr/sbin
+Author: Robert Woodcock <rcw@debian.org>
+Index: mtr/Makefile.am
+===================================================================
+--- mtr.orig/Makefile.am
++++ mtr/Makefile.am
+@@ -5,7 +5,8 @@ EXTRA_DIST = \
+ 	img/mtr_icon.xpm
+ 	$(TEST_FILES)
+ 
+-sbin_PROGRAMS = mtr mtr-packet
++# We don't want these in /usr/sbin - rcw
++bin_PROGRAMS = mtr mtr-packet
+ TESTS = \
+ 	test/cmdparse.py \
+ 	test/param.py \
+@@ -41,8 +42,8 @@ dist_man_MANS = mtr.8 mtr-packet.8
+ PATHFILES += man/mtr.8 man/mtr-packet.8
+ 
+ install-exec-hook: 
+-	`setcap cap_net_raw+ep $(DESTDIR)$(sbindir)/mtr-packet` \
+-	|| chmod u+s $(DESTDIR)$(sbindir)/mtr-packet
++	`setcap cap_net_raw+ep $(DESTDIR)$(bindir)/mtr-packet` \
++	|| chmod u+s $(DESTDIR)$(bindir)/mtr-packet
+ 
+ mtr_SOURCES = ui/mtr.c ui/mtr.h \
+               ui/net.c ui/net.h \

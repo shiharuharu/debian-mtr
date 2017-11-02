@@ -1,7 +1,6 @@
 #!/bin/sh
 
-aclocal
+aclocal $ACLOCAL_OPTS
 autoheader
 automake --add-missing --copy --foreign
-autoconf
-
+autoconf --force

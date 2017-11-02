@@ -6,8 +6,6 @@ export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 %:
 	dh $@
 
-
-
 override_dh_auto_configure:
 	./bootstrap.sh
 
@@ -15,19 +13,16 @@ override_dh_auto_configure:
 	touch aclocal.m4 && \
 	touch configure
 
+	head -n 1 debian/changelog | sed 's/[^(]*(\([^-]*\)-.*/\1/' > .tarball-version
 	autoreconf -fi
 
-	mkdir mtr && cd mtr && CFLAGS=-I.. ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin
+	CFLAGS=-I.. dh_auto_configure --builddirectory=mtr -- $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags)
 
-	mkdir mtr-tiny && cd mtr-tiny && CFLAGS=-I.. ../configure $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --prefix=`pwd`/debian/tmp/usr --mandir=`pwd`/debian/tmp/usr/share/man --sbindir=`pwd`/debian/tmp/usr/bin --without-gtk
-
-
+	CFLAGS=-I.. dh_auto_configure --builddirectory=mtr-tiny -- $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --without-gtk
 
 override_dh_auto_build:
 	make -C mtr
 	make -C mtr-tiny
-
-
 
 override_dh_auto_clean:
 	rm -f Makefile.in
@@ -36,20 +31,16 @@ override_dh_auto_clean:
 	rm -f configure.in
 	rm -rf mtr
 	rm -rf mtr-tiny
+	rm -f .tarball-version
 	dh_auto_clean
-
-
 
 override_dh_installdirs-arch:
 	dh_installdirs -a
-	$(MAKE) -C mtr-tiny prefix=`pwd`/debian/mtr-tiny/usr install
-	mv mtr-tiny/debian/tmp/usr/bin/mtr debian/mtr-tiny/usr/bin/
-	$(MAKE) -C mtr prefix=`pwd`/debian/mtr/usr install
-	mv mtr/debian/tmp/usr/bin/mtr debian/mtr/usr/bin/
+	dh_auto_install --builddirectory=mtr --destdir=debian/mtr
+	dh_auto_install --builddirectory=mtr-tiny --destdir=debian/mtr-tiny
 
 override_dh_installchangelogs-arch:
 	dh_installchangelogs -a NEWS
-
 
 override_dh_fixperms-arch:
 	dh_fixperms -a

@@ -1,3 +1,22 @@
+mtr (0.92-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream release
+  * Bump Standards-Version to 4.1.0
+  * d/control:
+    - add Rhonda to uploaders
+  * d/rules:
+    - use dh_auto_configure, fixes FTCBFS, patch by Helmut Grohne
+      (closes: #839879)
+  * d/control: remove 'extra' priority, inherit optional from source
+
+  [ Robert Woodcock ]
+  * d/patches: install_on_usrbin: install on bin instead of sbin
+  * d/*.manpages: create files for mtr-* packages
+  * d/rules: create tarball-version
+
+ -- Robert Woodcock <rcw@debian.org>  Wed, 01 Nov 2017 19:48:40 -0700
+
 mtr (0.87-1) unstable; urgency=medium
 
   * Correct typos in the postinst and package description

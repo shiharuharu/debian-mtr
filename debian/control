@@ -2,8 +2,9 @@ Source: mtr
 Section: net
 Priority: optional
 Maintainer: Robert Woodcock <rcw@debian.org>
-Uploaders: Samuel Henrique <samueloph@gmail.com>
-Standards-Version: 3.9.8
+Uploaders: Rhonda D'Vine <rhonda@debian.org>,
+           Samuel Henrique <samueloph@gmail.com>
+Standards-Version: 4.1.0
 Homepage: http://www.bitwizard.nl/mtr/
 Build-Depends: automake,
                debhelper (>= 10),
@@ -14,7 +15,6 @@ Vcs-Browser: https://anonscm.debian.org/git/collab-maint/mtr.git
 
 Package: mtr
 Architecture: any
-Priority: extra
 Depends: ${misc:Depends},
          ${shlibs:Depends}
 Breaks: mtr-tiny,
