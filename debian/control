@@ -12,6 +12,7 @@ Build-Depends: automake,
                libncurses-dev
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/mtr.git
 Vcs-Browser: https://anonscm.debian.org/git/collab-maint/mtr.git
+Rules-Requires-Root: no
 
 Package: mtr
 Architecture: any

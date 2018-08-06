@@ -1,3 +1,14 @@
+mtr (0.92-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Remove redundant debian/*manpages files.  The upstream build
+    system correctly installs the manpages by default and the
+    manpages had incorrect path.  (Closes: #903182)
+  * Set Rules-Requires-Root to no as mtr does not need (fake)root
+    during the binary targets.
+
+ -- Niels Thykier <niels@thykier.net>  Mon, 06 Aug 2018 20:33:06 +0000
+
 mtr (0.92-1) unstable; urgency=medium
 
   [ Samuel Henrique ]
