@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Robert Woodcock <rcw@debian.org>
 Uploaders: Rhonda D'Vine <rhonda@debian.org>,
            Samuel Henrique <samueloph@gmail.com>
-Standards-Version: 4.1.0
+Standards-Version: 4.2.0
 Homepage: http://www.bitwizard.nl/mtr/
 Build-Depends: automake,
                debhelper (>= 11),
