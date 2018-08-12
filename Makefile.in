@@ -36,8 +36,8 @@ sbin_PROGRAMS = mtr$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
-	TODO config.guess config.sub depcomp install-sh missing \
+	$(top_srcdir)/configure AUTHORS COPYING INSTALL NEWS TODO \
+	config.guess config.sub depcomp install-sh missing \
 	mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
