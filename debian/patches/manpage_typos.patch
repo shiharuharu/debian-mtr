@@ -1,0 +1,26 @@
+From 3a0fb57bb09c8dccc2041fc2cc1e35d4a0274ad6 Mon Sep 17 00:00:00 2001
+From: Samuel Henrique <samueloph@gmail.com>
+Date: Sun, 15 Oct 2017 15:03:22 -0200
+Subject: [PATCH] [typo]mtr.8.in: s/allows to/allows one to/
+
+---
+ man/mtr.8.in | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/man/mtr.8.in b/man/mtr.8.in
+index 7dacd8e..a23ad99 100644
+--- a/man/mtr.8.in
++++ b/man/mtr.8.in
+@@ -438,9 +438,9 @@ for full description of this socket option.
+ recognizes a few environment variables.
+ .TP
+ .B MTR_OPTIONS
+-This environment variable allows to specify options, as if they were
+-passed on the command line.  It is parsed before reading the actual
+-command line options, so that options specified in
++This environment variable allows one to specify options, as if they
++were passed on the command line.  It is parsed before reading the
++actual command line options, so that options specified in
+ .B MTR_OPTIONS
+ are overridden by command-line options.
+ 
