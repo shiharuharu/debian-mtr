@@ -64,7 +64,9 @@ int   dns = 1;
 int   cpacketsize = 64;          /* default packet size */
 int   bitpattern = 0;
 int   tos = 0;
+int   reportwide = 0;
 int af = DEFAULT_AF;
+int mtrtype = IPPROTO_ICMP;     /* Use ICMP as default packet type */
 
                                 /* begin ttl windows addByMin */
 int  fstTTL = 1;                /* default start at first hop */
@@ -124,6 +126,7 @@ void parse_arg (int argc, char **argv)
     { "help", 0, 0, 'h' },
 
     { "report", 0, 0, 'r' },
+    { "report-wide", 0, 0, 'w' },
     { "xml", 0, 0, 'x' },
     { "curses", 0, 0, 't' },
     { "gtk", 0, 0, 'g' },
@@ -143,6 +146,7 @@ void parse_arg (int argc, char **argv)
     { "address", 1, 0, 'a' },
     { "first-ttl", 1, 0, 'f' },	/* -f & -m are borrowed from traceroute */
     { "max-ttl", 1, 0, 'm' },
+    { "udp", 0, 0, 'u' },	/* UDP (default is ICMP) */
     { "inet", 0, 0, '4' },	/* IPv4 only */
     { "inet6", 0, 0, '6' },	/* IPv6 only */
     { 0, 0, 0, 0 }
@@ -152,7 +156,7 @@ void parse_arg (int argc, char **argv)
   while(1) {
     /* added f:m:o: byMin */
     opt = getopt_long(argc, argv,
-		      "vhrxtglpo:i:c:s:b:Q:na:f:m:46", long_options, NULL);
+		      "vhrwxtglpo:i:c:s:b:Q:na:f:m:u46", long_options, NULL);
     if(opt == -1)
       break;
 
@@ -166,6 +170,9 @@ void parse_arg (int argc, char **argv)
 
     case 'r':
       DisplayMode = DisplayReport;
+      break;
+    case 'w':
+      reportwide = 1;
       break;
     case 't':
       DisplayMode = DisplayCurses;
@@ -238,7 +245,7 @@ void parse_arg (int argc, char **argv)
           exit (1);
         }
       }
-      strcpy (fld_active, optarg);
+      strcpy ((char*)fld_active, optarg);
       break;
     case 'b':
       bitpattern = atoi (optarg);
@@ -252,6 +259,9 @@ void parse_arg (int argc, char **argv)
 	 * details in rfc2474 */
 	tos = 0;
       }
+      break;
+    case 'u':
+      mtrtype = IPPROTO_UDP;
       break;
     case '4':
       af = AF_INET;
@@ -354,14 +364,20 @@ int main(int argc, char **argv)
 
   parse_arg (argc, argv);
 
+  /* Now that we know mtrtype we can select which socket to use */
+  if (net_selectsocket() != 0) {
+    fprintf( stderr, "mtr: Couldn't determine raw socket type.\n" );
+    exit( EXIT_FAILURE );
+  }
+
   if (PrintVersion) {
     printf ("mtr " VERSION "\n");
     exit(0);
   }
 
   if (PrintHelp) {
-    printf("usage: %s [-hvrctglspni46] [--help] [--version] [--report]\n"
-	   "\t\t[--report-cycles=COUNT] [--curses] [--gtk]\n"
+    printf("usage: %s [-hvrwctglspniu46] [--help] [--version] [--report]\n"
+	   "\t\t[--report-wide] [--report-cycles=COUNT] [--curses] [--gtk]\n"
            "\t\t[--raw] [--split] [--no-dns] [--address interface]\n" /* BL */
            "\t\t[--psize=bytes/-s bytes]\n"            /* ok */
 	   "\t\t[--interval=SECONDS] HOSTNAME [PACKETSIZE]\n", argv[0]);
@@ -384,7 +400,7 @@ int main(int argc, char **argv)
   bzero( &hints, sizeof hints );
   hints.ai_family = af;
   hints.ai_socktype = SOCK_DGRAM;
-  error = getaddrinfo( Hostname, "0", &hints, &res );
+  error = getaddrinfo( Hostname, NULL, &hints, &res );
   if ( error ) {
     perror( gai_strerror(error) );
     exit( EXIT_FAILURE );
