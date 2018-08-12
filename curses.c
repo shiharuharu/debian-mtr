@@ -48,7 +48,7 @@
 #endif
 
 #ifndef getmaxyx
-#  define getmaxyx(win,y,x)	(y = (win)->_maxy + 1, x = (win)->_maxx + 1)
+#  define getmaxyx(win,y,x)	((y) = (win)->_maxy + 1, (x) = (win)->_maxx + 1)
 #endif
 
 #include "mtr-curses.h"
@@ -88,6 +88,8 @@ int mtr_curses_keyaction() {
     return ActionReset;
   if (tolower(c) == 'd')
     return ActionDisplay;
+  if (tolower(c) == 'n')
+    return ActionDNS;
 
   return 0;
 }
@@ -107,12 +109,15 @@ void mtr_curses_hosts(int startstat) {
 
     if(addr != 0) {
       name = dns_lookup(addr);
+      if (! net_up(at))
+	attron(A_BOLD);
       if(name != NULL) {
 	printw("%s", name);
       } else {
 	printw("%d.%d.%d.%d", (addr >> 24) & 0xff, (addr >> 16) & 0xff, 
 	       (addr >> 8) & 0xff, addr & 0xff);
       }
+      attroff(A_BOLD);
 
       getyx(stdscr, y, x);
       move(y, startstat);
@@ -180,13 +185,13 @@ void mtr_print_scaled(int ms) {
 	printw(">");
 }
 
-void mtr_fill_graph(int at) {
+void mtr_fill_graph(int at, int cols) {
 	int* saved;
 	int i;
 	int val;
 
 	saved = net_saved_pings(at);
-	for (i = 0; i < SAVED_PINGS; i++) {
+	for (i = SAVED_PINGS-cols; i < SAVED_PINGS; i++) {
 		if (saved[i] == -2) {
 			printw(" ");
 		} else if (saved[i] == -1) {
@@ -207,12 +212,12 @@ void mtr_fill_graph(int at) {
 	}
 }
 
-void mtr_curses_graph(int startstat) {
+void mtr_curses_graph(int startstat, int cols) {
 	int max, at, addr, y, x;
 	char* name;
-	char blocks[50];
 
 	max = net_max();
+
 	for (at = 0; at < max; at++) {
 		printw("%2d. ", at+1);
 
@@ -222,18 +227,21 @@ void mtr_curses_graph(int startstat) {
 			continue;
 		}
 
+		if (! net_up(at))
+			attron(A_BOLD);
 		name = dns_lookup(addr);
 		if (name) {
 			printw("%s", name);
 		} else {
 			printw("%d.%d.%d.%d", (addr >> 24) & 0xff, (addr >> 16) && 0xff, (addr >> 8) & 0xff, addr & 0xff);
 		}
+		attroff(A_BOLD);
 
 		getyx(stdscr, y, x);
 		move(y, startstat);
 
 		printw(" ");
-		mtr_fill_graph(at);
+		mtr_fill_graph(at, cols);
 		printw("\n");
 	}
 }
@@ -283,15 +291,18 @@ void mtr_curses_redraw() {
     mtr_curses_hosts(startstat);
   } else {
     /* David Sward, Jan 1999 */
-    startstat = maxx - 52;
+    char msg[80];
+    int max_cols = maxx<=SAVED_PINGS+30 ? maxx-30 : SAVED_PINGS;
+    startstat = 28;
 
-    mvprintw(rowstat - 1, startstat, " Last 50 pings");
-
+    sprintf(msg, " Last %3d pings", max_cols);
+    mvprintw(rowstat - 1, startstat, msg);
+    
     attroff(A_BOLD);
     move(rowstat, 0);
 
     mtr_gen_scale();
-    mtr_curses_graph(startstat);
+    mtr_curses_graph(startstat, max_cols);
 
     printw("\n");
     attron(A_BOLD);

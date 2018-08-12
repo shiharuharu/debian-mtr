@@ -85,12 +85,15 @@ struct nethost {
   uint32 addr;
   int xmit;
   int returned;
+  int sent;
+  int up;
   long long total;
   int last;
   int best;
   int worst;
   int transit;
   int saved[SAVED_PINGS];
+  int saved_seq_offset;
 };
 
 struct sequence {
@@ -165,6 +168,9 @@ int new_sequence(int index) {
   memset(&sequence[seq].time, 0, sizeof(sequence[seq].time));
   
   host[index].transit = 1;
+  if (host[index].sent)
+    host[index].up = 0;
+  host[index].sent = 1;
   net_save_xmit(index);
   
   return seq;
@@ -253,6 +259,8 @@ void net_process_ping(int seq, uint32 addr, struct timeval now) {
 
   host[index].total += totusec;
   host[index].returned++;
+  host[index].sent = 0;
+  host[index].up = 1;
   host[index].transit = 0;
 
   net_save_return(index, sequence[seq].saved_seq, totusec);
@@ -282,7 +290,7 @@ void net_process_return() {
 
   header = (struct ICMPHeader *)(packet + sizeof(struct IPHeader));
   if(header->type == ICMP_ECHOREPLY) {
-    if(header->id != getpid())
+    if(header->id != (uint16)getpid())
       return;
 
     net_process_ping(header->sequence, fromaddr.sin_addr.s_addr, now);
@@ -293,7 +301,7 @@ void net_process_return() {
     
     header = (struct ICMPHeader *)(packet + sizeof(struct IPHeader) + 
 				sizeof(struct ICMPHeader) + sizeof(struct IPHeader));
-    if(header->id != getpid())
+    if(header->id != (uint16)getpid())
       return;
 
     net_process_ping(header->sequence, fromaddr.sin_addr.s_addr, now);
@@ -356,6 +364,10 @@ int net_xmit(int at) {
 }
 int net_transit(int at) { 
    return host[at].transit;
+}
+
+int net_up(int at) { 
+   return host[at].up;
 }
 
 void net_end_transit() {
@@ -453,12 +465,15 @@ void net_reset() {
     host[at].xmit = 0;
     host[at].transit = 0;
     host[at].returned = 0;
+    host[at].sent = 0;
+    host[at].up = 0;
     host[at].total = 0;
     host[at].best = 0;
     host[at].worst = 0;
     for (i=0; i<SAVED_PINGS; i++) {
       host[at].saved[i] = -2;	/* unsent */
     }
+    host[at].saved_seq_offset = -SAVED_PINGS+2;
   }
   
   for(at = 0; at < MaxSequence; at++) {
@@ -482,18 +497,27 @@ int* net_saved_pings(int at) {
 	return host[at].saved;
 }
 
+void net_save_increment() 
+{
+  int at;
+  for (at = 0; at < MaxHost; at++) {
+    memmove(host[at].saved, host[at].saved+1, (SAVED_PINGS-1)*sizeof(int));
+    host[at].saved[SAVED_PINGS-1] = -2;
+    host[at].saved_seq_offset += 1;
+  }
+}
+
 void net_save_xmit(int at) {
-	int tmp[SAVED_PINGS];
-	memcpy(tmp, &host[at].saved[1], (SAVED_PINGS-1)*sizeof(int));
-	memcpy(host[at].saved, tmp, (SAVED_PINGS-1)*sizeof(int));
-	host[at].saved[SAVED_PINGS-1] = -1;
+  if (host[at].saved[SAVED_PINGS-1] != -2) 
+    net_save_increment();
+  host[at].saved[SAVED_PINGS-1] = -1;
 }
 
 void net_save_return(int at, int seq, int ms) {
 	int idx;
-	idx = SAVED_PINGS - (host[at].xmit - seq) - 1;
-	if (idx < 0) {
-		return;
+	idx = seq - host[at].saved_seq_offset;
+	if (idx < 0 || idx > SAVED_PINGS) {
+	  return;
 	}
 	host[at].saved[idx] = ms;
 }

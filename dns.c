@@ -26,6 +26,7 @@
 #include <config.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/errno.h>
 #include <sys/socket.h>
@@ -981,7 +982,7 @@ void parserespacket(byte *s,int l){
                   restell("Resolver error: Specified rdata length exceeds packet size.");
                   return;
                }
-               if (datatype == qdatatype){
+               if (datatype == qdatatype || datatype == T_CNAME){
                   if (debug){
                      sprintf(tempstring,"Resolver: TTL: %s",strtdiff(sendstring,ttl));
                      restell(tempstring);
@@ -1013,6 +1014,7 @@ void parserespacket(byte *s,int l){
                            }
                            break;
                         case T_PTR:
+                        case T_CNAME:
                            *namestring = '\0';
                            r = dn_expand(s,s + l,c,namestring,MAXDNAME);
                            if (r == -1){
@@ -1027,6 +1029,10 @@ void parserespacket(byte *s,int l){
                               restell("Resolver error: Domain name too long.");
                               failrp(rp);
                               return;
+                           }
+                           if (datatype == T_CNAME){
+                              strcpy(stackstring,namestring);
+                              break;
                            }
                            if (!rp->hostname){
                               rp->hostname = (char *)statmalloc(strlen(namestring) + 1);
@@ -1188,11 +1194,12 @@ char *dns_lookup2(ip_t ip){
    return NULL;
 }
 
+int use_dns = 1;
 
 char *dns_lookup(ip_t ip){
   char *t;
 
   if (!dns) return strlongip (ip);
   t = dns_lookup2 (ip);
-  return t?t:strlongip(ip);
+  return (t&&use_dns)?t:strlongip(ip);
 }
