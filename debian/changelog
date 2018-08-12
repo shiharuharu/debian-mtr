@@ -1,9 +1,21 @@
+mtr (0.92-2) unstable; urgency=medium
+
+  * Bump DH to 11
+  * Bump Standards-Version to 4.2.0
+  * Ack NMU, thanks to Niels Thykier (closes: #903182)
+  * Move packaging to salsa.d.o
+  * Update my email to @debian.org
+  * d/copyright: update debian/* entry
+  * d/p/manpage_typos.patch: new patch to fix typos
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 12 Aug 2018 09:58:39 -0300
+
 mtr (0.92-1.1) unstable; urgency=medium
 
   * Non-maintainer upload.
   * Remove redundant debian/*manpages files.  The upstream build
     system correctly installs the manpages by default and the
-    manpages had incorrect path.  (Closes: #903182)
+    manpages had incorrect path.  (closes: #903182)
   * Set Rules-Requires-Root to no as mtr does not need (fake)root
     during the binary targets.
 
