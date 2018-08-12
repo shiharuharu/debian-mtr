@@ -1,14 +1,8 @@
-# Makefile.in generated automatically by automake 1.2d from Makefile.am
+# Makefile.in generated automatically by automake 1.2 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
-# gives unlimited permission to copy and/or distribute it,
-# with or without modifications, as long as this notice is preserved.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
-# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-# PARTICULAR PURPOSE.
+# gives unlimited permission to copy, distribute and modify it.
 
 
 SHELL = /bin/sh
@@ -49,12 +43,12 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 
-NORMAL_INSTALL = :
-PRE_INSTALL = :
-POST_INSTALL = :
-NORMAL_UNINSTALL = :
-PRE_UNINSTALL = :
-POST_UNINSTALL = :
+NORMAL_INSTALL = true
+PRE_INSTALL = true
+POST_INSTALL = true
+NORMAL_UNINSTALL = true
+PRE_UNINSTALL = true
+POST_UNINSTALL = true
 CC = @CC@
 CURSES_OBJ = @CURSES_OBJ@
 GTK_CFLAGS = @GTK_CFLAGS@
@@ -73,6 +67,8 @@ man_MANS = mtr.8
 mtr_SOURCES = mtr.c \
               net.c net.h \
               dns.c dns.h \
+              raw.c raw.h \
+              split.c split.h \
               display.c display.h \
               report.c report.h \
               getopt.c getopt1.c getopt.h \
@@ -85,6 +81,8 @@ mtr_DEPENDENCIES = $(GTK_OBJ) $(CURSES_OBJ)
 mtr_LDFLAGS = $(GTK_OBJ) $(CURSES_OBJ)
 
 EXTRA_DIST = SECURITY mtr.8
+
+DISTCLEANFILES = *~
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
@@ -96,8 +94,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I.
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-mtr_OBJECTS =  mtr.o net.o dns.o display.o report.o getopt.o getopt1.o \
-select.o
+mtr_OBJECTS =  mtr.o net.o dns.o raw.o split.o display.o report.o \
+getopt.o getopt1.o select.o
 mtr_LDADD = $(LDADD)
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
@@ -106,7 +104,7 @@ MANS = mtr.8
 
 NROFF = nroff
 DIST_COMMON =  README AUTHORS COPYING INSTALL Makefile.am Makefile.in \
-NEWS acconfig.h aclocal.m4 config.h.in configure configure.in \
+NEWS TODO acconfig.h aclocal.m4 config.h.in configure configure.in \
 install-sh missing mkinstalldirs stamp-h.in
 
 
@@ -120,7 +118,7 @@ OBJECTS = $(mtr_OBJECTS)
 default: all
 
 .SUFFIXES:
-.SUFFIXES: .S .c .o .s
+.SUFFIXES: .c .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps Makefile
 
@@ -137,7 +135,6 @@ $(srcdir)/configure: $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCI
 	cd $(srcdir) && $(AUTOCONF)
 
 config.h: stamp-h
-	@:
 stamp-h: $(srcdir)/config.h.in $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
@@ -153,14 +150,14 @@ mostlyclean-hdr:
 clean-hdr:
 
 distclean-hdr:
-	-rm -f config.h
+	rm -f config.h
 
 maintainer-clean-hdr:
 
 mostlyclean-sbinPROGRAMS:
 
 clean-sbinPROGRAMS:
-	-test -z "$(sbin_PROGRAMS)" || rm -f $(sbin_PROGRAMS)
+	test -z "$(sbin_PROGRAMS)" || rm -f $(sbin_PROGRAMS)
 
 distclean-sbinPROGRAMS:
 
@@ -185,19 +182,13 @@ uninstall-sbinPROGRAMS:
 .c.o:
 	$(COMPILE) -c $<
 
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
-	$(COMPILE) -c $<
-
 mostlyclean-compile:
-	-rm -f *.o core
+	rm -f *.o core
 
 clean-compile:
 
 distclean-compile:
-	-rm -f *.tab.c
+	rm -f *.tab.c
 
 maintainer-clean-compile:
 
@@ -217,7 +208,7 @@ install-man: $(MANS)
 uninstall-man:
 	$(NORMAL_UNINSTALL)
 	inst=`echo "mtr" | sed '$(transform)'`.8; \
-	-rm -f $(mandir)/man8/$$inst
+	rm -f $(mandir)/man8/$$inst
 
 
 # This directory's subdirectories are mostly independent; you can cd
@@ -233,7 +224,7 @@ all-recursive install-data-recursive install-exec-recursive \
 installdirs-recursive install-recursive uninstall-recursive  \
 check-recursive installcheck-recursive info-recursive dvi-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
+	for subdir in $(SUBDIRS); do \
 	  target=`echo $@ | sed s/-recursive//`; \
 	  echo "Making $$target in $$subdir"; \
 	  (cd $$subdir && $(MAKE) $$target) \
@@ -243,9 +234,7 @@ check-recursive installcheck-recursive info-recursive dvi-recursive:
 mostlyclean-recursive clean-recursive distclean-recursive \
 maintainer-clean-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
-	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
-	  rev="$$subdir $$rev"; \
-	done; \
+	rev=''; for subdir in $(SUBDIRS); do rev="$$rev $$subdir"; done; \
 	for subdir in $$rev; do \
 	  target=`echo $@ | sed s/-recursive//`; \
 	  echo "Making $$target in $$subdir"; \
@@ -259,25 +248,24 @@ tags-recursive:
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP)
-	here=`pwd` && cd $(srcdir) \
-	  && mkid -f$$here/ID $(SOURCES) $(HEADERS) $(LISP)
+ID: $(HEADERS) $(SOURCES)
+	here=`pwd` && cd $(srcdir) && mkid -f$$here/ID $(SOURCES) $(HEADERS)
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) $(LISP)
+TAGS: tags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES)
 	tags=; \
 	here=`pwd`; \
 	list='$(SUBDIRS)'; for subdir in $$list; do \
 	  test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
 	done; \
-	test -z "$(ETAGS_ARGS)config.h.in$(SOURCES)$(HEADERS)$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags config.h.in $(SOURCES) $(HEADERS) $(LISP) -o $$here/TAGS)
+	test -z "$(ETAGS_ARGS)config.h.in$(SOURCES)$(HEADERS)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags config.h.in $(SOURCES) $(HEADERS) -o $$here/TAGS)
 
 mostlyclean-tags:
 
 clean-tags:
 
 distclean-tags:
-	-rm -f TAGS ID
+	rm -f TAGS ID
 
 maintainer-clean-tags:
 
@@ -288,7 +276,7 @@ top_distdir = $(distdir)
 # it guarantees that the distribution is self-contained by making another
 # tarfile.
 distcheck: dist
-	-rm -rf $(distdir)
+	rm -rf $(distdir)
 	GZIP=$(GZIP) $(TAR) zxf $(distdir).tar.gz
 	mkdir $(distdir)/=build
 	mkdir $(distdir)/=inst
@@ -301,20 +289,20 @@ distcheck: dist
 	  && $(MAKE) install \
 	  && $(MAKE) installcheck \
 	  && $(MAKE) dist
-	-rm -rf $(distdir)
+	rm -rf $(distdir)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 dist: distdir
 	-chmod -R a+r $(distdir)
 	GZIP=$(GZIP) $(TAR) chozf $(distdir).tar.gz $(distdir)
-	-rm -rf $(distdir)
+	rm -rf $(distdir)
 dist-all: distdir
 	-chmod -R a+r $(distdir)
 	GZIP=$(GZIP) $(TAR) chozf $(distdir).tar.gz $(distdir)
-	-rm -rf $(distdir)
+	rm -rf $(distdir)
 distdir: $(DISTFILES)
-	-rm -rf $(distdir)
+	rm -rf $(distdir)
 	mkdir $(distdir)
 	-chmod 777 $(distdir)
 	@for file in $(DISTFILES); do \
@@ -323,27 +311,14 @@ distdir: $(DISTFILES)
 	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $$d/$$file $(distdir)/$$file; \
 	done
-	for subdir in $(SUBDIRS); do \
-	  test -d $(distdir)/$$subdir \
-	  || mkdir $(distdir)/$$subdir \
-	  || exit 1; \
-	  chmod 777 $(distdir)/$$subdir; \
-	  (cd $$subdir && $(MAKE) top_distdir=../$(distdir) distdir=../$(distdir)/$$subdir distdir) \
+	for subdir in $(SUBDIRS); do		\
+	  test -d $(distdir)/$$subdir		\
+	  || mkdir $(distdir)/$$subdir		\
+	  || exit 1;				\
+	  chmod 777 $(distdir)/$$subdir;	\
+	  (cd $$subdir && $(MAKE) top_distdir=../$(top_distdir) distdir=../$(distdir)/$$subdir distdir) \
 	    || exit 1; \
 	done
-curses.o curses.lo: curses.c config.h mtr-curses.h display.h net.h dns.h
-display.o display.lo: display.c config.h display.h mtr-curses.h \
-	mtr-gtk.h report.h select.h
-dns.o dns.lo: dns.c config.h
-getopt.o getopt.lo: getopt.c config.h
-getopt1.o getopt1.lo: getopt1.c config.h getopt.h
-gtk.o gtk.lo: gtk.c config.h net.h dns.h mtr-gtk.h img/mtr_icon.xpm
-mtr.o mtr.lo: mtr.c config.h mtr-curses.h getopt.h display.h dns.h \
-	report.h net.h
-net.o net.lo: net.c config.h net.h
-report.o report.lo: report.c config.h report.h net.h
-select.o select.lo: select.c config.h display.h dns.h net.h
-
 info: info-recursive
 dvi: dvi-recursive
 check: all-am
@@ -380,19 +355,19 @@ installdirs: installdirs-recursive
 
 
 mostlyclean-generic:
-	-test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
+	test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
-	-rm -f Makefile $(DISTCLEANFILES)
-	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
-	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
+	rm -f Makefile $(DISTCLEANFILES)
+	rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 maintainer-clean-generic:
-	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-hdr mostlyclean-sbinPROGRAMS \
 		mostlyclean-compile mostlyclean-tags \
 		mostlyclean-generic
@@ -412,12 +387,12 @@ mostlyclean:  mostlyclean-recursive mostlyclean-am
 clean:  clean-recursive clean-am
 
 distclean:  distclean-recursive distclean-am
-	-rm -f config.status
+	rm -f config.status
 
 maintainer-clean:  maintainer-clean-recursive maintainer-clean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f config.status
+	rm -f config.status
 
 .PHONY: default mostlyclean-hdr distclean-hdr clean-hdr \
 maintainer-clean-hdr mostlyclean-sbinPROGRAMS distclean-sbinPROGRAMS \
