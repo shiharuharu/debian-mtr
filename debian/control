@@ -7,7 +7,7 @@ Uploaders: Rhonda D'Vine <rhonda@debian.org>,
 Standards-Version: 4.1.0
 Homepage: http://www.bitwizard.nl/mtr/
 Build-Depends: automake,
-               debhelper (>= 10),
+               debhelper (>= 11),
                libgtk2.0-dev,
                libncurses-dev
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/mtr.git
