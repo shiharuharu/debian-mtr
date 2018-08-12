@@ -1,0 +1,88 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/* Define if you don't have the GTK+ libraries available.  */
+#undef NO_GTK
+
+/* Define if you don't have the curses libraries available.  */
+#undef NO_CURSES
+
+/* Define if you don't have the herror() function available.  */
+#undef NO_HERROR
+
+/* Define if you don't have the strerror() function available.  */
+#undef NO_STRERROR
+
+/*  Define the package name.  ("mtr")  */
+#undef PACKAGE
+
+/*  Define the version string.  */
+#undef VERSION
+
+
+/* The number of bytes in a unsigned char.  */
+#undef SIZEOF_UNSIGNED_CHAR
+
+/* The number of bytes in a unsigned int.  */
+#undef SIZEOF_UNSIGNED_INT
+
+/* The number of bytes in a unsigned long.  */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* The number of bytes in a unsigned short.  */
+#undef SIZEOF_UNSIGNED_SHORT
+
+/* Define if you have the <curses.h> header file.  */
+#undef HAVE_CURSES_H
+
+/* Define if you have the <ncurses.h> header file.  */
+#undef HAVE_NCURSES_H
+
+/* Define if you have the <ncurses/curses.h> header file.  */
+#undef HAVE_NCURSES_CURSES_H
+
+/* Define if you have the <sys/xti.h> header file.  */
+#undef HAVE_SYS_XTI_H
+
+/* Define if you have the m library (-lm).  */
+#undef HAVE_LIBM
+
+/* Define if you have the ncurses library (-lncurses).  */
+#undef HAVE_LIBNCURSES
+
+/* Define if you have the nsl library (-lnsl).  */
+#undef HAVE_LIBNSL
+
+/* Define if you have the resolv library (-lresolv).  */
+#undef HAVE_LIBRESOLV
+
+/* Define if you have the socket library (-lsocket).  */
+#undef HAVE_LIBSOCKET
+
+/*  Find the proper type for 8 bits  */
+#if SIZEOF_UNSIGNED_CHAR == 1
+typedef unsigned char uint8;
+#else
+#error No 8 bit type
+#endif
+
+/*  Find the proper type for 16 bits  */
+#if SIZEOF_UNSIGNED_SHORT == 2
+typedef unsigned short uint16;
+#elif SIZEOF_UNSIGNED_INT == 2
+typedef unsigned int uint16;
+#elif SIZEOF_UNSIGNED_LONG == 2
+typedef unsigned long uint16;
+#else
+#error No 16 bit type
+#endif
+
+/*  Find the proper type for 32 bits  */
+#if SIZEOF_UNSIGNED_SHORT == 4
+typedef unsigned short uint32;
+#elif SIZEOF_UNSIGNED_INT == 4
+typedef unsigned int uint32;
+#elif SIZEOF_UNSIGNED_LONG == 4
+typedef unsigned long uint32;
+#else
+#error No 32 bit type
+#endif
