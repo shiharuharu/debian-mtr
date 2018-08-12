@@ -1,4 +1,85 @@
 WHAT'S NEW?
+  v0.67 Bad keyboarding by REW caused this one out the door. Sorry. 
+        No changes. 
+  v0.66 Through the Debian bugtracking system a bug report and
+        fix was sent my way, that deals with stupid optmization 
+        trying to save some 768 bytes of memory, sacrificing "it 
+        works" on a different architecture... (default char signedness)
+  v0.65 Dancer Vesperman noted that mtr no longer traces past
+        a section of non-responding hosts. Apparently I added
+        a line in net.c that didn't make sense in mtr-0.56. I 
+        can't find the reason for adding that line, so someone 
+        who thinks (s)he needs it, should holler. 
+
+  v0.64 Philippe suggests to do the time_t thingy before socket.h. 
+        Apparently, MAC OS X doesn't compile socket.h otherwise.
+
+  v0.63 Suggestion by RCW: Add -lm at line 70 of Configure.in.
+        On my system no ill effects ensued, so this version released 
+        so that he can test if it still works on his sytem. 
+
+        Let me add that it's stupid that I have to specify that this
+        this program now requires Automake version 1.5 to build, where
+        Automake was intended to make software independent of different
+        versions of build software!
+
+        For those concerned about the above statement: If you're just
+        trying to compile and use MTR, there is no need for automake. 
+        Just when you're messing with the configure and build system of
+        mtr is automake a tool you need. 
+	
+  v0.62 Apparently someone changed gethostbyname into gethostbyname2
+        in mtr.c in an attempt to add IPV6 support. For systems without
+        ipv6 support, the old gethostbyname should be used! Linux 
+        has the call even if you don't enable IPV6. Thanks Gary (rsub)
+
+  v0.61 Attempt to get/print the local IP address. Now shows as
+        0.0.0.0 :-( Hints and tips appreciated! -- REW
+        Lots of blank space reformatting.
+        moved the interface address setting to net.c (where it
+        belongs). 
+
+  v0.60 John Thacker submitted a surprisingly simple patch to
+        enable linking against GTK2.  (up to 2.4.0)
+
+  v0.59 Josh Martin suggested to add some bounds checking to 
+        the dynamic field code. This caused me to delve in, and
+        rewrite some things. Now 50 lines of code less, but cleaner
+        code. :-)
+
+  v0.58 I don't remember. Fogot to update this. :-( Check the 
+        patch.
+
+  v0.57 Lots of whitespace cleanups. And a DNS fix: Don't do DNS
+        lookups in raw mode with -n specified. 
+
+  v0.56 Fixed compile warnings. Now compiles with -Wall. If your
+        compiler finds things mine didn't feel free to shout. 
+
+  v0.55 Cleanup patch. I'm going to do some maintenance on MTR, 
+        but I want to be able to say: Can you see which version
+        fixed/broke things for you, so you're going to see a 
+        bunch of new releases soon. 
+
+  v0.54 Added "scrolling" patch from Roland Illig, to allow 
+        scrolling in text mode. I've always wanted this......
+ 
+  v0.53 Added fix for raw mode. 
+
+  v0.52 Mostly cleanups from Brett Johnson on MacOS X. It may 
+        clean up some compilation problems on MacOS X as well. 
+
+  v0.51 Fixed the bug introduced by the previous select loop fix... 
+        Thanks Evgeniy
+
+  v0.50 Make "interface address" option work.
+        Changes to "select" loop to allow window resizes (select 
+        interruption) to work. Thanks Mike!
+
+  v0.49 Fix compilation problems on several platforms.
+
+  v0.48 Draw names in red (GTK) or bold (Curses) if host doesn't 
+        respond. 
 
   v0.47 Fixed a (believed-) non-exploitable bufferoverflow. 
         Thanks Damian. 
@@ -9,7 +90,7 @@ WHAT'S NEW?
   v0.45 People are pressuring me to release new versions with their
         changes. That's fine. Now this version just adds dynamic
         switching between numeric / dns names, and some minor
-        stuff I forgot. This release serves as a code-sycn-release.
+        stuff I forgot. This release serves as a code-sync-release.
         new version with even more new stuff in about two weeks!
         I'm afraid I don't know how to fix the MaxOS-X compilation
         problems in the source. Help wanted... 
@@ -18,7 +99,7 @@ WHAT'S NEW?
 
   v0.43 Compile fixes.
 
-  v0.41 Added afr's patch to allow disabeling of gtk without Robn's hack. 
+  v0.41 Added afr's patch to allow disabling of gtk without Robn's hack. 
         Made report mode report the newly added extra resolution. 
 
   v0.40 Fixed some problems with HPUX and SunOS.

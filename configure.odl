@@ -793,7 +793,7 @@ fi
 
 # Define the identity of the package.
 PACKAGE=mtr
-VERSION=0.67
+VERSION=0.63
 cat >> confdefs.h <<EOF
 #define PACKAGE "$PACKAGE"
 EOF
@@ -1941,7 +1941,7 @@ fi
     if pkg-config --atleast-pkgconfig-version 0.7 ; then
       :
     else
-      echo "*** pkg-config too old; version 0.7 or better required."
+      echo *** pkg-config too old; version 0.7 or better required.
       no_gtk=yes
       PKG_CONFIG=no
     fi
@@ -2080,7 +2080,7 @@ fi
   if test "x$no_gtk" = x ; then
      echo "$ac_t""yes (version $gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)" 1>&6
      CFLAGS="$CFLAGS $GTK_CFLAGS"
-                           LIBS="$LIBS $GTK_LIBS -lm"     
+                           LIBS="$LIBS $GTK_LIBS"     
   else
      echo "$ac_t""no" 1>&6
      if test "$PKG_CONFIG" = "no" ; then

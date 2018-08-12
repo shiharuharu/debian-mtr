@@ -18,11 +18,13 @@
 */
 
 #include <config.h>
+#include <stdio.h>
 #include "display.h"
 #include "mtr-curses.h"
 #include "mtr-gtk.h"
 #include "report.h"
 #include "select.h"
+#include "raw.h"
 
 extern int DisplayMode;
 
@@ -32,14 +34,18 @@ extern int DisplayMode;
 #define mtr_curses_redraw()
 #define mtr_curses_keyaction()
 #define mtr_curses_clear()
+#else
+#include "mtr-curses.h"
 #endif
 
 #ifdef NO_GTK
 #define gtk_open()
 #define gtk_close()
 #define gtk_redraw()
-#define gtk_keyaction()
-#define gtk_loop()
+#define gtk_keyaction() 0
+#define gtk_loop() {fprintf (stderr, "No GTK support. Sorry.\n"); exit (1); } 
+#else
+#include "mtr-gtk.h"
 #endif
 
 #ifdef NO_SPLIT
@@ -47,6 +53,8 @@ extern int DisplayMode;
 #define split_close()
 #define split_redraw()
 #define split_keyaction() 0
+#else
+#include "split.h"
 #endif
 
 void display_detect(int *argc, char ***argv) {
@@ -65,18 +73,25 @@ void display_detect(int *argc, char ***argv) {
 
 void display_open() {
   switch(DisplayMode) {
+
   case DisplayReport:
     report_open();
     break;
-
+  case DisplayTXT:
+    txt_open();
+    break;
+  case DisplayXML:
+    xml_open();
+    break;
+  case DisplayCSV:
+    csv_open();
+    break;
   case DisplayCurses:
     mtr_curses_open();  
     break;
-
   case DisplaySplit:            /* BL */
     split_open();
     break;
-
   case DisplayGTK:
     gtk_open();
     break;
@@ -88,15 +103,21 @@ void display_close() {
   case DisplayReport:
     report_close();
     break;
-
+  case DisplayTXT:
+    txt_close();
+    break;
+  case DisplayXML:
+    xml_close();
+    break;
+  case DisplayCSV:
+    csv_close();
+    break;
   case DisplayCurses:
     mtr_curses_close();
     break;
-
   case DisplaySplit:            /* BL */
     split_close();
     break;
-    
   case DisplayGTK:
     gtk_close();
     break;
@@ -138,6 +159,9 @@ int display_keyaction() {
 void display_rawping(int host, int msec) {
   switch(DisplayMode) {
   case DisplayReport:
+  case DisplayTXT:
+  case DisplayXML:
+  case DisplayCSV:
   case DisplaySplit:            /* BL */
   case DisplayCurses:
   case DisplayGTK:
@@ -152,6 +176,9 @@ void display_rawping(int host, int msec) {
 void display_rawhost(int host, int ip_addr) {
   switch(DisplayMode) {
   case DisplayReport:
+  case DisplayTXT:
+  case DisplayXML:
+  case DisplayCSV:
   case DisplaySplit:            /* BL */
   case DisplayCurses:
   case DisplayGTK:
@@ -165,13 +192,15 @@ void display_rawhost(int host, int ip_addr) {
 
 void display_loop() {
   switch(DisplayMode) {
-  case DisplayCurses:
   case DisplayReport:
+  case DisplayTXT:
+  case DisplayXML:
+  case DisplayCSV:
   case DisplaySplit:            /* BL */
+  case DisplayCurses:
   case DisplayRaw:
     select_loop();
     break;
-
   case DisplayGTK:
     gtk_loop();
     break;
@@ -185,6 +214,9 @@ void display_clear() {
     mtr_curses_clear();
     break;
   case DisplayReport:
+  case DisplayTXT:
+  case DisplayXML:
+  case DisplayCSV:
   case DisplaySplit:            /* BL */
   case DisplayRaw:
     break;

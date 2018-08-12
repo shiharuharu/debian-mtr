@@ -19,7 +19,12 @@
 */
 
 #include <config.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/time.h>
+#include <sys/types.h>
 
 #ifndef NO_GTK
 #include <stdlib.h>
@@ -51,7 +56,8 @@ void gtk_add_ping_timeout (void)
 }
 
 
-void gtk_do_init(int *argc, char ***argv) {
+void gtk_do_init(int *argc, char ***argv) 
+{
   static int done = 0;
 
   if(!done) {
@@ -61,7 +67,8 @@ void gtk_do_init(int *argc, char ***argv) {
   }
 }
 
-int gtk_detect(int *argc, char ***argv) {
+int gtk_detect(int *argc, char ***argv) 
+{
   if(getenv("DISPLAY") != NULL) {
     /* If we do this here, gtk_init exits on an error. This happens
        BEFORE the user has had a chance to tell us not to use the 
@@ -72,13 +79,15 @@ int gtk_detect(int *argc, char ***argv) {
   }
 }
 
-gint Window_destroy(GtkWidget *Window, gpointer data) {
+gint Window_destroy(GtkWidget *Window, gpointer data) 
+{
   gtk_main_quit();
 
   return FALSE;
 }
 
-gint Restart_clicked(GtkWidget *Button, gpointer data) {
+gint Restart_clicked(GtkWidget *Button, gpointer data) 
+{
   net_reset();
   gtk_redraw();
 
@@ -86,7 +95,8 @@ gint Restart_clicked(GtkWidget *Button, gpointer data) {
 }
 
 
-gint Pause_clicked(GtkWidget *Button, gpointer data) {
+gint Pause_clicked(GtkWidget *Button, gpointer data) 
+{
   static int paused = 0;
 
   if (paused) {
@@ -109,7 +119,8 @@ gint Pause_clicked(GtkWidget *Button, gpointer data) {
  * What's the problem with this? (-> "I don't think so)  -- REW
  */
 
-gint WaitTime_changed(GtkAdjustment *Adj, GtkWidget *Button) {
+gint WaitTime_changed(GtkAdjustment *Adj, GtkWidget *Button) 
+{
   WaitTime = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(Button));
   gtk_timeout_remove (tag);
   gtk_add_ping_timeout ();
@@ -118,7 +129,8 @@ gint WaitTime_changed(GtkAdjustment *Adj, GtkWidget *Button) {
   return FALSE;
 }
 
-gint Host_activate(GtkWidget *Entry, gpointer data) {
+gint Host_activate(GtkWidget *Entry, gpointer data) 
+{
   int addr;
 
   addr = dns_forward(gtk_entry_get_text(GTK_ENTRY(Entry)));
@@ -135,13 +147,15 @@ gint Host_activate(GtkWidget *Entry, gpointer data) {
   return FALSE;
 }
 
-GdkPixmap *gtk_load_pixmap(char **pixmap) {
+GdkPixmap *gtk_load_pixmap(char **pixmap) 
+{
   return gdk_pixmap_colormap_create_from_xpm_d(NULL, 
 					       gdk_colormap_get_system(), 
 					       NULL, NULL, pixmap);
 }
 
-void Toolbar_fill(GtkWidget *Toolbar) {
+void Toolbar_fill(GtkWidget *Toolbar) 
+{
   GtkWidget *Button;
   GtkWidget *Label;
   GtkWidget *Entry;
@@ -193,14 +207,15 @@ void Toolbar_fill(GtkWidget *Toolbar) {
   gtk_widget_show(Entry);
 }
 
-char *Report_Text[] = { "Hostname", "Loss", "Rcv", "Snt", "Last", "Best", "Avg", "Worst", NULL };
-int Report_Positions[] = { 10, 240, 280, 320, 360, 400, 440, 480, 0 };
+char *Report_Text[] = { "Hostname", "Loss", "Rcv", "Snt", "Last", "Best", "Avg", "Worst", "StDev", NULL };
+int Report_Positions[] = { 10, 200, 240, 280, 320, 360, 400, 440, 480, 0 };
 GtkWidget *Report;
 GtkWidget *ReportBody;
 
-GtkWidget *GetRow(int index) {
+GtkWidget *GetRow(int index) 
+{
   int addr;
-  char str[256], *name;
+  char *name;
   GtkWidget *Row, *Label;
 
   Row = gtk_fixed_new();
@@ -223,7 +238,8 @@ GtkWidget *GetRow(int index) {
   return Row;
 }
 
-GtkWidget *Scrollarea_create() {
+GtkWidget *Scrollarea_create() 
+{
   GtkWidget *List;
   GtkWidget *scroll;
   int count;
@@ -249,7 +265,8 @@ GtkWidget *Scrollarea_create() {
   return scroll;
 }
 
-void gtk_add_row(GtkWidget *List) {
+void gtk_add_row(GtkWidget *List) 
+{
   int at;
   GtkWidget *Row, *Label;
 
@@ -273,14 +290,18 @@ void gtk_set_field(GtkCList *List, int row, int ix, char *str) {
   gtk_clist_set_text(List, row, ix, str);
 }
 
-void gtk_set_field_num(GtkCList *List, int row, int ix, char *format, int num) {
+//void gtk_set_field_num(GtkCList *List, int row, int ix, char *format, int num) {
+// changed int to dobule byMin
+void gtk_set_field_num(GtkCList *List, int row, int ix, char *format, double num) 
+{
   char str[32];
 
   sprintf(str, format, num);
   gtk_set_field(List, row, ix, str);
 }
 
-void gtk_update_row(GtkCList *List, int row) {
+void gtk_update_row(GtkCList *List, int row) 
+{
   int addr;
   char str[256], *name;
   GdkColor color;
@@ -301,33 +322,37 @@ void gtk_update_row(GtkCList *List, int row) {
   if (net_up(row)) {
     gdk_color_black(cmap, &color);
   } else {
-    color.red = 0xffffff;
+    color.red = 0xffff;
     color.green = 0;
     color.blue = 0;
   }
   gdk_color_alloc (cmap, &color);
   gtk_clist_set_foreground(List, row, &color);
 
-  gtk_set_field(List, row, 0, name);
+  /* changed the format type and added stdev and first/max TTL byMin */
+  /* the row - net_min() is kind of not clean, need some more work */
+  gtk_set_field(List, row - net_min(), 0, name);
 
-  gtk_set_field_num(List, row, 1, "%d%%", net_percent(row));
-  gtk_set_field_num(List, row, 2, "%d", net_returned(row));  
-  gtk_set_field_num(List, row, 3, "%d", net_xmit(row));
+  gtk_set_field_num(List, row - net_min(), 1, "%.0f%%", net_loss(row)/1000.0);
+  gtk_set_field_num(List, row - net_min(), 2, "%.0f", net_returned(row));  
+  gtk_set_field_num(List, row - net_min(), 3, "%.0f", net_xmit(row));
   
-  gtk_set_field_num(List, row, 4, "%d", net_last(row)/1000);
-  gtk_set_field_num(List, row, 5, "%d", net_best(row)/1000);
-  gtk_set_field_num(List, row, 6, "%d", net_avg(row)/1000);  
-  gtk_set_field_num(List, row, 7, "%d", net_worst(row)/1000);
+  gtk_set_field_num(List, row - net_min(), 4, "%.0f", net_last(row)/1000.0);
+  gtk_set_field_num(List, row - net_min(), 5, "%.0f", net_best(row)/1000.0);
+  gtk_set_field_num(List, row - net_min(), 6, "%.0f", net_avg(row)/1000.0);  
+  gtk_set_field_num(List, row - net_min(), 7, "%.0f", net_worst(row)/1000.0);
+  gtk_set_field_num(List, row - net_min(), 8, "%.2f", net_stdev(row)/1000.0);
   
 }
 
-void gtk_redraw() {
-  int at;
+void gtk_redraw() 
+{
+  int at  = net_min();	// changed from 0 to net_min for TTL stuff byMin
   int max = net_max();
 
   gtk_clist_freeze(GTK_CLIST(ReportBody));
 
-  while(GTK_CLIST(ReportBody)->rows < max) {
+  while(GTK_CLIST(ReportBody)->rows < max -at) {	// byMin
     gtk_clist_append(GTK_CLIST(ReportBody), Report_Text);
   }
 
@@ -335,21 +360,23 @@ void gtk_redraw() {
     gtk_clist_remove(GTK_CLIST(ReportBody), GTK_CLIST(ReportBody)->rows - 1);
   }
 
-  for(at = 0; at < max; at++) {
+  // for(at=0; at < max; at++) {	// replaced byMin
+  for(; at < max; at++) {
     gtk_update_row(GTK_CLIST(ReportBody), at);
   }
 
   gtk_clist_thaw(GTK_CLIST(ReportBody));
 }
 
-void Window_fill(GtkWidget *Window) {
+void Window_fill(GtkWidget *Window) 
+{
   GtkWidget *VBox;
   GtkWidget *Toolbar;
   GtkWidget *List;
 
   gtk_window_set_title(GTK_WINDOW(Window), "My traceroute  [v" VERSION "]");
   gtk_window_set_wmclass(GTK_WINDOW(Window), "mtr", "Mtr");
-  gtk_widget_set_usize(Window, 580, 400); 
+  gtk_widget_set_usize(Window, 600, 400); 
   gtk_container_border_width(GTK_CONTAINER(Window), 10);
   VBox = gtk_vbox_new(FALSE, 10);
 
@@ -366,7 +393,8 @@ void Window_fill(GtkWidget *Window) {
   gtk_widget_show(VBox);
 }
 
-void gtk_open() {
+void gtk_open() 
+{
   GtkWidget *Window;
   GdkPixmap *icon;
 
@@ -395,14 +423,17 @@ void gtk_open() {
   gdk_window_set_icon_name(Window->window, "mtr");
 }
 
-void gtk_close() {
+void gtk_close() 
+{
 }
 
-int gtk_keyaction() {
+int gtk_keyaction() 
+{
   return 0;
 }
 
-gint gtk_ping(gpointer data) {
+gint gtk_ping(gpointer data) 
+{
   gtk_redraw();
   net_send_batch();
   gtk_timeout_remove (tag);
@@ -410,18 +441,21 @@ gint gtk_ping(gpointer data) {
   return TRUE;
 }
 
-void gtk_net_data(gpointer data, gint fd, GdkInputCondition cond) {
+void gtk_net_data(gpointer data, gint fd, GdkInputCondition cond) 
+{
   net_process_return();
 }
 
-void gtk_dns_data(gpointer data, gint fd, GdkInputCondition cond) {
+void gtk_dns_data(gpointer data, gint fd, GdkInputCondition cond) 
+{
   dns_ack();
 
   gtk_redraw();
 }
 
 
-void gtk_loop() {
+void gtk_loop() 
+{
   gtk_add_ping_timeout ();
   gdk_input_add(net_waitfd(), GDK_INPUT_READ, gtk_net_data, NULL);
   gdk_input_add(dns_waitfd(), GDK_INPUT_READ, gtk_dns_data, NULL);
