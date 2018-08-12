@@ -32,11 +32,24 @@
 #include "img/mtr_icon.xpm"
 #endif
 
+
+gint gtk_ping(gpointer data);
+
+
 extern char *Hostname;
 extern float WaitTime;
-extern float DeltaTime;
-
 static int tag;
+static GtkWidget *Pause_Button;
+
+
+void gtk_add_ping_timeout (void)
+{
+  int dt;
+
+  dt = calc_deltatime (WaitTime);
+  tag = gtk_timeout_add(dt / 1000, gtk_ping, NULL);
+}
+
 
 void gtk_do_init(int *argc, char ***argv) {
   static int done = 0;
@@ -50,7 +63,9 @@ void gtk_do_init(int *argc, char ***argv) {
 
 int gtk_detect(int *argc, char ***argv) {
   if(getenv("DISPLAY") != NULL) {
-    gtk_do_init(argc, argv);
+    /* If we do this here, gtk_init exits on an error. This happens
+       BEFORE the user has had a chance to tell us not to use the 
+       display... */
     return TRUE;
   } else {
     return FALSE;
@@ -70,12 +85,52 @@ gint Restart_clicked(GtkWidget *Button, gpointer data) {
   return FALSE;
 }
 
+
+gint Pause_clicked(GtkWidget *Button, gpointer data) {
+  static int paused = 0;
+
+  if (paused) {
+    gtk_add_ping_timeout ();
+  } else {
+    gtk_timeout_remove (tag);
+  }
+  paused = ! paused;
+  gtk_redraw();
+
+  return FALSE;
+}
+
+/*
+ * There is a small problem with the following code:
+ * The timeout is canceled and removed in order to ensure that
+ * it takes effect (consider what happens if you set the timeout to 999,
+ * then try to undo the change); is a better approach possible? -- CMR
+ *
+ * What's the problem with this? (-> "I don't think so)  -- REW
+ */
+
+gint WaitTime_changed(GtkAdjustment *Adj, GtkWidget *Button) {
+  WaitTime = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(Button));
+  gtk_timeout_remove (tag);
+  gtk_add_ping_timeout ();
+  gtk_redraw();
+
+  return FALSE;
+}
+
 gint Host_activate(GtkWidget *Entry, gpointer data) {
   int addr;
 
   addr = dns_forward(gtk_entry_get_text(GTK_ENTRY(Entry)));
-  if(addr)
+  if(addr) {
     net_reopen(addr);
+    /* If we are "Paused" at this point it is usually because someone
+       entered a non-existing host. Therefore do the go-ahead... --REW */
+    gtk_toggle_button_set_state( GTK_TOGGLE_BUTTON( Pause_Button ) , 0);
+  } else {
+    gtk_toggle_button_set_state( GTK_TOGGLE_BUTTON( Pause_Button ) , 1);
+    gtk_entry_append_text( GTK_ENTRY(Entry), ": not found" );
+  }
 
   return FALSE;
 }
@@ -90,6 +145,7 @@ void Toolbar_fill(GtkWidget *Toolbar) {
   GtkWidget *Button;
   GtkWidget *Label;
   GtkWidget *Entry;
+  GtkAdjustment *Adjustment;
 
   Button = gtk_button_new_with_label("Quit");
   gtk_box_pack_end(GTK_BOX(Toolbar), Button, FALSE, FALSE, 0);
@@ -103,6 +159,28 @@ void Toolbar_fill(GtkWidget *Toolbar) {
 		     GTK_SIGNAL_FUNC(Restart_clicked), NULL);
   gtk_widget_show(Button);
 
+  Pause_Button = gtk_toggle_button_new_with_label("Pause");
+  gtk_box_pack_end(GTK_BOX(Toolbar), Pause_Button, FALSE, FALSE, 0);
+  gtk_signal_connect(GTK_OBJECT(Pause_Button), "clicked",
+                    GTK_SIGNAL_FUNC(Pause_clicked), NULL);
+  gtk_widget_show(Pause_Button);
+
+  /* allow root only to set zero delay */
+  Adjustment = (GtkAdjustment *)gtk_adjustment_new(WaitTime,
+                                                  getuid()==0 ? 0.00:1.00,
+                                                 999.99,
+                                                  1.0, 10.0,
+                                                  0.0);
+  Button = gtk_spin_button_new(Adjustment, 0.5, 2);
+  gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(Button), TRUE);
+  /* gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(Button), FALSE); */
+  /* gtk_spin_button_set_set_update_policy(GTK_SPIN_BUTTON(Button),
+     GTK_UPDATE_IF_VALID); */
+  gtk_box_pack_end(GTK_BOX(Toolbar), Button, FALSE, FALSE, 0);
+  gtk_signal_connect(GTK_OBJECT(Adjustment), "value_changed",
+                    GTK_SIGNAL_FUNC(WaitTime_changed), Button);
+  gtk_widget_show(Button);
+ 
   Label = gtk_label_new("Hostname");
   gtk_box_pack_start(GTK_BOX(Toolbar), Label, FALSE, FALSE, 0);
   gtk_widget_show(Label);
@@ -147,12 +225,14 @@ GtkWidget *GetRow(int index) {
 
 GtkWidget *Scrollarea_create() {
   GtkWidget *List;
+  GtkWidget *scroll;
   int count;
 
   for(count = 0; Report_Positions[count]; count++);
 
   List = GTK_WIDGET(gtk_clist_new_with_titles(count, Report_Text));
-  gtk_clist_set_policy(GTK_CLIST(List), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  scroll = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   for(count = 0; Report_Positions[count + 1]; count++) {
     gtk_clist_set_column_width(GTK_CLIST(List), count, 
 			       Report_Positions[count + 1] - 
@@ -162,9 +242,11 @@ GtkWidget *Scrollarea_create() {
   for(count = 1; Report_Positions[count]; count++) {
     gtk_clist_set_column_justification(GTK_CLIST(List), count, GTK_JUSTIFY_RIGHT);
   }
+  gtk_container_add(GTK_CONTAINER(scroll), List);
+  gtk_widget_show(List);
 
   ReportBody = List;
-  return List;
+  return scroll;
 }
 
 void gtk_add_row(GtkWidget *List) {
@@ -218,9 +300,9 @@ void gtk_update_row(GtkCList *List, int row) {
   gtk_set_field_num(List, row, 2, "%d", net_returned(row));  
   gtk_set_field_num(List, row, 3, "%d", net_xmit(row));
   
-  gtk_set_field_num(List, row, 4, "%d", net_best(row));
-  gtk_set_field_num(List, row, 5, "%d", net_avg(row));  
-  gtk_set_field_num(List, row, 6, "%d", net_worst(row));
+  gtk_set_field_num(List, row, 4, "%d", net_best(row)/1000);
+  gtk_set_field_num(List, row, 5, "%d", net_avg(row)/1000);  
+  gtk_set_field_num(List, row, 6, "%d", net_worst(row)/1000);
   
 }
 
@@ -251,6 +333,7 @@ void Window_fill(GtkWidget *Window) {
   GtkWidget *List;
 
   gtk_window_set_title(GTK_WINDOW(Window), "My traceroute  [v" VERSION "]");
+  gtk_window_set_wmclass(GTK_WINDOW(Window), "mtr", "Mtr");
   gtk_widget_set_usize(Window, 540, 400); 
   gtk_container_border_width(GTK_CONTAINER(Window), 10);
   VBox = gtk_vbox_new(FALSE, 10);
@@ -308,7 +391,7 @@ gint gtk_ping(gpointer data) {
   gtk_redraw();
   net_send_batch();
   gtk_timeout_remove (tag);
-  tag = gtk_timeout_add(DeltaTime*1000, gtk_ping, NULL);
+  gtk_add_ping_timeout ();
   return TRUE;
 }
 
@@ -324,8 +407,7 @@ void gtk_dns_data(gpointer data, gint fd, GdkInputCondition cond) {
 
 
 void gtk_loop() {
-  DeltaTime = WaitTime/10;
-  tag = gtk_timeout_add(DeltaTime*1000, gtk_ping, NULL);
+  gtk_add_ping_timeout ();
   gdk_input_add(net_waitfd(), GDK_INPUT_READ, gtk_net_data, NULL);
   gdk_input_add(dns_waitfd(), GDK_INPUT_READ, gtk_dns_data, NULL);
 

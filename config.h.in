@@ -31,8 +31,17 @@
 /* The number of bytes in a unsigned short.  */
 #undef SIZEOF_UNSIGNED_SHORT
 
+/* Define if you have the attron function.  */
+#undef HAVE_ATTRON
+
+/* Define if you have the seteuid function.  */
+#undef HAVE_SETEUID
+
 /* Define if you have the <curses.h> header file.  */
 #undef HAVE_CURSES_H
+
+/* Define if you have the <cursesX.h> header file.  */
+#undef HAVE_CURSESX_H
 
 /* Define if you have the <ncurses.h> header file.  */
 #undef HAVE_NCURSES_H
@@ -40,8 +49,14 @@
 /* Define if you have the <ncurses/curses.h> header file.  */
 #undef HAVE_NCURSES_CURSES_H
 
+/* Define if you have the <sys/types.h> header file.  */
+#undef HAVE_SYS_TYPES_H
+
 /* Define if you have the <sys/xti.h> header file.  */
 #undef HAVE_SYS_XTI_H
+
+/* Define if you have the bind library (-lbind).  */
+#undef HAVE_LIBBIND
 
 /* Define if you have the m library (-lm).  */
 #undef HAVE_LIBM
@@ -52,11 +67,11 @@
 /* Define if you have the nsl library (-lnsl).  */
 #undef HAVE_LIBNSL
 
-/* Define if you have the resolv library (-lresolv).  */
-#undef HAVE_LIBRESOLV
-
 /* Define if you have the socket library (-lsocket).  */
 #undef HAVE_LIBSOCKET
+
+/* Define if you have the termcap library (-ltermcap).  */
+#undef HAVE_LIBTERMCAP
 
 /*  Find the proper type for 8 bits  */
 #if SIZEOF_UNSIGNED_CHAR == 1
