@@ -1,6 +1,7 @@
 mtr (0.92-3) UNRELEASED; urgency=medium
 
   * d/copyright: Use https protocol in Format field
+  * d/changelog: Remove trailing whitespaces
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:37:11 +0200
 
@@ -441,8 +442,8 @@ mtr (0.34-1) unstable; urgency=low
 
 mtr (0.28-0.2) frozen unstable; urgency=low
 
-  * Rebuilt with libgtk1 (1.0.6) to circumvent problems due to 
-    incompatibilities between the frozen and unstable versions of libgtk1.1 . 
+  * Rebuilt with libgtk1 (1.0.6) to circumvent problems due to
+    incompatibilities between the frozen and unstable versions of libgtk1.1 .
     (Fixes #29160, #29221, #29332).
 
  -- J.H.M. Dassen (Ray) <jdassen@wi.LeidenUniv.nl>  Thu, 12 Nov 1998 14:22:10 +0100
