@@ -1,3 +1,9 @@
+mtr (0.92-3) UNRELEASED; urgency=medium
+
+  * d/copyright: Use https protocol in Format field
+
+ -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:37:11 +0200
+
 mtr (0.92-2) unstable; urgency=medium
 
   * Bump DH to 11
