@@ -1,3 +1,9 @@
+mtr (0.92-2~bpo9+1) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports.
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 15 Nov 2018 00:13:44 -0200
+
 mtr (0.92-2) unstable; urgency=medium
 
   * Bump DH to 11
