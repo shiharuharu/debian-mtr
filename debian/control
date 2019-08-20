@@ -7,7 +7,7 @@ Uploaders: Rhonda D'Vine <rhonda@debian.org>,
 Standards-Version: 4.2.0
 Homepage: http://www.bitwizard.nl/mtr/
 Build-Depends: automake,
-               debhelper (>= 11),
+               debhelper (>= 12~),
                libgtk2.0-dev,
                libncurses-dev
 Vcs-Browser: https://salsa.debian.org/debian/mtr
