@@ -77,6 +77,9 @@ mtr \- a network diagnostic tool
 .B \-\-mpls\c
 ]
 [\c
+.BI \-I \ NAME\c
+]
+[\c
 .BI \-a \ ADDRESS\c
 ]
 [\c
@@ -377,6 +380,12 @@ Use this option to tell
 to display information from ICMP extensions for MPLS (RFC 4950)
 that are encoded in the response packets.
 .TP
+.B \-I \fINAME\fR, \fB\-\-interface \fINAME
+Use the network interface with a specific name for sending network probes.
+This can be useful when you have multiple network interfaces with routes
+to your destination, for example both wired Ethernet and WiFi, and wish
+to test a particular interface.
+.TP
 .B \-a \fIADDRESS\fR, \fB\-\-address \fIADDRESS
 Use this option to bind the outgoing socket to
 .IR ADDRESS ,
@@ -429,9 +438,9 @@ for full description of this socket option.
 recognizes a few environment variables.
 .TP
 .B MTR_OPTIONS
-This environment variable allows to specify options, as if they were
-passed on the command line.  It is parsed before reading the actual
-command line options, so that options specified in
+This environment variable allows one to specify options, as if they
+were passed on the command line.  It is parsed before reading the
+actual command line options, so that options specified in
 .B MTR_OPTIONS
 are overridden by command-line options.
 
@@ -466,6 +475,28 @@ executable.
 .TP
 .B DISPLAY
 Specifies an X11 server for the GTK+ frontend.
+.SH INTERACTIVE CONTROL
+.B mtr
+can be controlled while it is running with the following keys:
+  ?|h     help
+  p       pause (SPACE to resume)
+  d       switching display mode
+  e       toggle MPLS information on/off
+  n       toggle DNS on/off
+  r       reset all counters
+  o str   set the columns to display, default str='LRS N BAWV'
+  j       toggle latency(LS NABWV)/jitter(DR AGJMXI) stats
+  c <n>   report cycle n, default n=infinite
+  i <n>   set the ping interval to n seconds, default n=1
+  f <n>   set the initial time-to-live(ttl), default n=1
+  m <n>   set the max time-to-live, default n= # of hops
+  s <n>   set the packet size to n or random(n<0)
+  b <c>   set ping bit pattern to c(0..255) or random(c<0)
+  Q <t>   set ping packet's TOS to t
+  u       switch between ICMP ECHO and UDP datagrams
+  y       switching IP info
+  z       toggle ASN info on/off
+  q       exit
 .SH BUGS
 Some modern routers give a lower priority to ICMP ECHO packets than 
 to other network traffic.  Consequently, the reliability of these
