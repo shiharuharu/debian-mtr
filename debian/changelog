@@ -1,9 +1,17 @@
-mtr (0.92-3) UNRELEASED; urgency=medium
+mtr (0.93-1) unstable; urgency=medium
 
+  [ Ondřej Nový ]
   * d/copyright: Use https protocol in Format field
   * d/changelog: Remove trailing whitespaces
 
- -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:37:11 +0200
+  [ Samuel Henrique ]
+  * New upstream version 0.93
+  * Bump DH level to 12
+  * Bump Standards-Version to 4.4.0
+  * d/docs: README is now in markdown
+  * d/p/manpage_typos.patch: remove, applied upstream
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 20 Aug 2019 22:26:21 +0100
 
 mtr (0.92-2) unstable; urgency=medium
 
