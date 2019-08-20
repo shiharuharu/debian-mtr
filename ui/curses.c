@@ -11,9 +11,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 #include "config.h"
@@ -157,6 +157,7 @@ int mtr_curses_keyaction(
 
     switch (c) {
     case 'q':
+    case -1:
     case 3:
         return ActionQuit;
     case 12:
@@ -235,7 +236,7 @@ int mtr_curses_keyaction(
 
         if (f <= 0.0)
             return ActionNone;
-        if (getuid() != 0 && f < 1.0)
+        if (!running_as_root() && (f < 1.0))
             return ActionNone;
         ctl->WaitTime = f;
 
@@ -363,6 +364,7 @@ int mtr_curses_keyaction(
             ("  b <c>   set ping bit pattern to c(0..255) or random(c<0)\n");
         printw("  Q <t>   set ping packet's TOS to t\n");
         printw("  u       switch between ICMP ECHO and UDP datagrams\n");
+        printw("  t       switch between ICMP ECHO and TCP\n");
 #ifdef HAVE_IPINFO
         printw("  y       switching IP info\n");
         printw("  z       toggle ASN info on/off\n");
@@ -404,6 +406,8 @@ static void mtr_curses_hosts(
     int at;
     struct mplslen *mpls, *mplss;
     ip_t *addr, *addrs;
+    int addrcmp_result;
+    int err;
     int y;
     char *name;
 
@@ -416,11 +420,14 @@ static void mtr_curses_hosts(
 
     for (at = net_min(ctl) + ctl->display_offset; at < max; at++) {
         printw("%2d. ", at + 1);
+        err = net_err(at);
         addr = net_addr(at);
         mpls = net_mpls(at);
 
-        if (addrcmp((void *) addr, (void *) &ctl->unspec_addr, ctl->af) !=
-            0) {
+        addrcmp_result = addrcmp(
+            (void *) addr, (void *) &ctl->unspec_addr, ctl->af);
+
+        if (err == 0 && addrcmp_result != 0) {
             name = dns_lookup(ctl, addr);
             if (!net_up(at))
                 attron(A_BOLD);
@@ -459,8 +466,8 @@ static void mtr_curses_hosts(
             printw("%s", buf);
 
             for (k = 0; k < mpls->labels && ctl->enablempls; k++) {
-                printw("\n    [MPLS: Lbl %lu Exp %u S %u TTL %u]",
-                       mpls->label[k], mpls->exp[k], mpls->s[k],
+                printw("\n    [MPLS: Lbl %lu TC %u S %u TTL %u]",
+                       mpls->label[k], mpls->tc[k], mpls->s[k],
                        mpls->ttl[k]);
             }
 
@@ -492,15 +499,16 @@ static void mtr_curses_hosts(
                     printw("%s", strlongip(ctl, addrs));
                 }
                 for (k = 0; k < mplss->labels && ctl->enablempls; k++) {
-                    printw("\n    [MPLS: Lbl %lu Exp %u S %u TTL %u]",
-                           mplss->label[k], mplss->exp[k], mplss->s[k],
+                    printw("\n    [MPLS: Lbl %lu TC %u S %u TTL %u]",
+                           mplss->label[k], mplss->tc[k], mplss->s[k],
                            mplss->ttl[k]);
                 }
                 attroff(A_BOLD);
             }
-
         } else {
-            printw("???");
+            attron(A_BOLD);
+            printw("(%s)", host_error_to_string(err));
+            attroff(A_BOLD);
         }
 
         printw("\n");
@@ -618,7 +626,7 @@ static void mtr_curses_graph(
     int startstat,
     int cols)
 {
-    int max, at, y;
+    int max, at, y, err;
     ip_t *addr;
     char *name;
     int __unused_int ATTRIBUTE_UNUSED;
@@ -629,22 +637,31 @@ static void mtr_curses_graph(
         printw("%2d. ", at + 1);
 
         addr = net_addr(at);
+        err = net_err(at);
+
         if (!addr) {
-            printw("???\n");
+            printw("(%s)", host_error_to_string(err));
             continue;
         }
 
-        if (!net_up(at))
-            attron(A_BOLD);
-        if (addrcmp((void *) addr, (void *) &ctl->unspec_addr, ctl->af)) {
+        if (err == 0
+            && addrcmp((void *) addr, (void *) &ctl->unspec_addr, ctl->af)) {
+
+            if (!net_up(at)) {
+                attron(A_BOLD);
+            }
+
 #ifdef HAVE_IPINFO
             if (is_printii(ctl))
                 printw(fmt_ipinfo(ctl, addr));
 #endif
             name = dns_lookup(ctl, addr);
             printw("%s", name ? name : strlongip(ctl, addr));
-        } else
-            printw("???");
+        } else {
+            attron(A_BOLD);
+            printw("(%s)", host_error_to_string(err));
+        }
+
         attroff(A_BOLD);
 
         getyx(stdscr, y, __unused_int);

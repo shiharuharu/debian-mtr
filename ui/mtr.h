@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 #ifndef MTR_MTR_H
@@ -83,6 +83,7 @@ struct mtr_ctl {
     float WaitTime;
     float GraceTime;
     char *Hostname;
+    char *InterfaceName;
     char *InterfaceAddress;
     char LocalHostname[128];
     int ipinfo_no;
@@ -132,10 +133,17 @@ extern const struct fields data_fields[MAXFLD];
 /* MPLS label object */
 struct mplslen {
     unsigned long label[MAXLABELS];     /* label value */
-    uint8_t exp[MAXLABELS];     /* experimental bits */
+    uint8_t tc[MAXLABELS];     /* Traffic Class bits */
     uint8_t ttl[MAXLABELS];     /* MPLS TTL */
     char s[MAXLABELS];          /* bottom of stack */
     char labels;                /* how many labels did we get? */
 };
+
+
+#ifdef USING_CYGWIN
+#define running_as_root() 1
+#else
+#define running_as_root() (getuid() == 0)
+#endif
 
 #endif                          /* MTR_MTR_H */
