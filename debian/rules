@@ -21,8 +21,8 @@ override_dh_auto_configure:
 	CFLAGS=-I.. dh_auto_configure --builddirectory=mtr-tiny -- $(shell dpkg-buildflags --export=configure >/dev/null 2>&1 && dpkg-buildflags --export=configure) $(confflags) --without-gtk
 
 override_dh_auto_build:
-	make -C mtr
-	make -C mtr-tiny
+	dh_auto_build -- -C mtr
+	dh_auto_build -- -C mtr-tiny
 
 override_dh_auto_clean:
 	rm -f Makefile.in
