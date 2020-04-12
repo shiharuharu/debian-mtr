@@ -5,7 +5,7 @@ Maintainer: Robert Woodcock <rcw@debian.org>
 Uploaders: Rhonda D'Vine <rhonda@debian.org>,
            Samuel Henrique <samueloph@debian.org>
 Standards-Version: 4.5.0
-Homepage: http://www.bitwizard.nl/mtr/
+Homepage: https://www.bitwizard.nl/mtr/
 Build-Depends: automake,
                debhelper-compat (= 12),
                libgtk2.0-dev,
