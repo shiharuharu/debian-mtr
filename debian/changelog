@@ -1,3 +1,14 @@
+mtr (0.93-2) unstable; urgency=medium
+
+  * Bump Standards Version to 4.5.0
+  * d/rules: Change override_dh_auto_build to allow debhelper to use
+    deblheper flags
+  * Use debhelper-compat instead of debhelper
+  * Add salsa-ci.yml for pipelines
+  * Add gbp.conf
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 19 Apr 2020 16:54:14 +0100
+
 mtr (0.93-1) unstable; urgency=medium
 
   [ Ondřej Nový ]
