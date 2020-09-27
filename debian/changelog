@@ -1,3 +1,16 @@
+mtr (0.94-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream version 0.94
+  * Bump DH to 13
+
+  [ Debian Janitor ]
+  * Use secure URI in Homepage field.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 27 Sep 2020 18:02:26 +0100
+
 mtr (0.93-2) unstable; urgency=medium
 
   * Bump Standards Version to 4.5.0
