@@ -424,8 +424,7 @@ static void mtr_curses_hosts(
         addr = net_addr(at);
         mpls = net_mpls(at);
 
-        addrcmp_result = addrcmp(
-            (void *) addr, (void *) &ctl->unspec_addr, ctl->af);
+        addrcmp_result = addrcmp(addr, &ctl->unspec_addr, ctl->af);
 
         if (err == 0 && addrcmp_result != 0) {
             name = dns_lookup(ctl, addr);
@@ -472,14 +471,12 @@ static void mtr_curses_hosts(
             }
 
             /* Multi path */
-            for (i = 0; i < MAXPATH; i++) {
+            for (i = 0; i < MAX_PATH; i++) {
                 addrs = net_addrs(at, i);
                 mplss = net_mplss(at, i);
-                if (addrcmp((void *) addrs, (void *) addr, ctl->af) == 0)
+                if (addrcmp(addrs, addr, ctl->af) == 0)
                     continue;
-                if (addrcmp
-                    ((void *) addrs, (void *) &ctl->unspec_addr,
-                     ctl->af) == 0)
+                if (addrcmp(addrs, &ctl->unspec_addr,ctl->af) == 0)
                     break;
 
                 name = dns_lookup(ctl, addrs);
@@ -645,7 +642,7 @@ static void mtr_curses_graph(
         }
 
         if (err == 0
-            && addrcmp((void *) addr, (void *) &ctl->unspec_addr, ctl->af)) {
+            && addrcmp(addr, &ctl->unspec_addr, ctl->af)) {
 
             if (!net_up(at)) {
                 attron(A_BOLD);
@@ -701,7 +698,7 @@ void mtr_curses_redraw(
     pwcenter(buf);
     attroff(A_BOLD);
 
-    mvprintw(1, 0, "%s (%s)", ctl->LocalHostname, net_localaddr());
+    mvprintw(1, 0, "%s (%s) -> %s", ctl->LocalHostname, net_localaddr(), ctl->Hostname);
     t = time(NULL);
     mvprintw(1, maxx - 25, iso_time(&t));
     printw("\n");

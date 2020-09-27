@@ -81,9 +81,11 @@ void display_open(
     case DisplayTXT:
         txt_open();
         break;
+#ifdef HAVE_JANSSON
     case DisplayJSON:
         json_open();
         break;
+#endif
     case DisplayXML:
         xml_open();
         break;
@@ -127,9 +129,11 @@ void display_close(
     case DisplayTXT:
         txt_close(ctl);
         break;
+#ifdef HAVE_JANSSON
     case DisplayJSON:
         json_close(ctl);
         break;
+#endif
     case DisplayXML:
         xml_close(ctl);
         break;
@@ -225,10 +229,11 @@ void display_rawping(
 void display_rawhost(
     struct mtr_ctl *ctl,
     int host,
-    ip_t * ip_addr)
+    ip_t * ip_addr,
+    struct mplslen *mpls)
 {
     if (ctl->DisplayMode == DisplayRaw)
-        raw_rawhost(ctl, host, ip_addr);
+        raw_rawhost(ctl, host, ip_addr, mpls);
 }
 
 
