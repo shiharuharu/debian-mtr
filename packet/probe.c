@@ -38,6 +38,8 @@
 #include "timeval.h"
 #include "sockaddr.h"
 
+char *probe_err;
+
 /*  Convert the destination address from text to sockaddr  */
 int decode_address_string(
     int ip_version,
@@ -98,18 +100,23 @@ int resolve_probe_addresses(
 {
     if (decode_address_string
         (param->ip_version, param->remote_address, dest_sockaddr)) {
+        probe_err = "decode address string remote";
         return -1;
     }
 
     if (param->local_address) {
         if (decode_address_string
             (param->ip_version, param->local_address, src_sockaddr)) {
+            probe_err = "decode address string local";
             return -1;
         }
     } else {
+        probe_err = "find source address";
         if (find_source_addr(src_sockaddr, dest_sockaddr)) {
+            //probe_err = "find source address";
             return -1;
         }
+        probe_err = "";
     }
     /* DGRAM ICMP id is taken from src_port not from ICMP header */
     if (param->protocol == IPPROTO_ICMP) {
@@ -311,8 +318,12 @@ int find_source_addr(
     int sock;
     int len;
     struct sockaddr_storage dest_with_port;
+#ifdef __linux__
+    // The Linux code needs these. 
     struct sockaddr_in *srcaddr4;
     struct sockaddr_in6 *srcaddr6;
+#endif
+
 
     dest_with_port = *destaddr;
 
@@ -323,16 +334,18 @@ int find_source_addr(
        anything to the port.
      */
     *sockaddr_port_offset(&dest_with_port) = htons(1);
-    len = sockaddr_addr_size(&dest_with_port);
+    len = sockaddr_size(&dest_with_port);
 
     sock = socket(destaddr->ss_family, SOCK_DGRAM, IPPROTO_UDP);
     if (sock == -1) {
+        probe_err = "open socket";
         return -1;
     }
 
     if (connect(sock, (struct sockaddr *) &dest_with_port, len) == 0) {
         if (getsockname(sock, (struct sockaddr *) srcaddr, &len)) {
             close(sock);
+            probe_err = "getsockname";
             return -1;
         }
     } else {
@@ -341,6 +354,7 @@ int find_source_addr(
          * a case when mtr is run against unreachable host (that can become
          * reachable) */
         if (errno != EHOSTUNREACH) {
+            probe_err = "not hostunreach";
             close(sock);
             return -1;
         }
@@ -354,6 +368,7 @@ int find_source_addr(
         }
 #else
         close(sock);
+        probe_err = "connect failed";
         return -1;
 #endif
     }
@@ -364,7 +379,7 @@ int find_source_addr(
        Zero the port, as we may later use this address to finding, and
        we don't want to use the port from the socket we just created.
      */
-    *sockaddr_port_offset(&srcaddr) = 0;
+    *sockaddr_port_offset(srcaddr) = 0;
 
     return 0;
 }

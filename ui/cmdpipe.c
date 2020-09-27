@@ -73,9 +73,9 @@ int send_synchronous_command(
     struct mtr_ctl *ctl,
     struct packet_command_pipe_t *cmdpipe,
     const char *cmd,
-    struct command_t *result)
+    struct command_t *result,
+    char *reply)
 {
-    char reply[PACKET_REPLY_BUFFER_SIZE];
     int command_length;
     int write_length;
     int read_length;
@@ -120,11 +120,12 @@ int check_feature(
 {
     char check_command[COMMAND_BUFFER_SIZE];
     struct command_t reply;
+    char reply_buf[PACKET_REPLY_BUFFER_SIZE];
 
     snprintf(check_command, COMMAND_BUFFER_SIZE,
              "1 check-support feature %s\n", feature);
 
-    if (send_synchronous_command(ctl, cmdpipe, check_command, &reply) ==
+    if (send_synchronous_command(ctl, cmdpipe, check_command, &reply, reply_buf) ==
         -1) {
         return -1;
     }
@@ -206,7 +207,7 @@ int check_packet_features(
 
 extern char *myname;
 /*
-    Execute mtr-packet, allowing the MTR_PACKET evironment to override
+    Execute mtr-packet, allowing the MTR_PACKET environment to override
     the PATH when locating the executable.
 */
 static
@@ -754,7 +755,7 @@ void consume_reply_buffer(
         /*
            Terminate the reply string at the newline, which
            is necessary in the case where we are able to read
-           mulitple replies arriving simultaneously.
+           multiple replies arriving simultaneously.
          */
         *end_of_reply = 0;
 

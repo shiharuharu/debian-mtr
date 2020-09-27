@@ -55,6 +55,7 @@ mtr_SOURCES = ui/mtr.c ui/mtr.h \
               ui/select.c ui/select.h \
               ui/utils.c ui/utils.h \
               packet/cmdparse.c packet/cmdparse.h \
+              packet/sockaddr.c packet/sockaddr.h \
               ui/mtr-curses.h \
               img/mtr_icon.xpm \
               ui/mtr-gtk.h
@@ -84,9 +85,15 @@ if WITH_GTK
 mtr_SOURCES += ui/gtk.c
 endif
 
+if WITH_LIBASAN
+ASAN_CFLAGS = -fno-omit-frame-pointer
+ASAN_CFLAGS += -fsanitize=undefined
+ASAN_CFLAGS += -fsanitize=address
+endif
+
 mtr_INCLUDES = $(GLIB_CFLAGS) -I$(top_builddir) -I$(top_srcdir)
-mtr_CFLAGS = $(GTK_CFLAGS) $(NCURSES_CFLAGS)
-mtr_LDADD = $(GTK_LIBS) $(NCURSES_LIBS) $(RESOLV_LIBS)
+mtr_CFLAGS = $(GTK_CFLAGS) $(NCURSES_CFLAGS) $(ASAN_CFLAGS) $(JANSSON_CFLAGS)
+mtr_LDADD = $(GTK_LIBS) $(NCURSES_LIBS) $(RESOLV_LIBS) $(JANSSON_LIBS)
 
 
 mtr_packet_SOURCES = \

@@ -41,7 +41,9 @@ enum {
     DisplayXML,
     DisplayCSV,
     DisplayTXT,
-    DisplayJSON
+#ifdef HAVE_JANSSON
+    DisplayJSON,
+#endif
 };
 
 enum {
@@ -74,7 +76,8 @@ extern void display_rawping(
 extern void display_rawhost(
     struct mtr_ctl *ctl,
     int hostnum,
-    ip_t * ip_addr);
+    ip_t *ip_addr,
+    struct mplslen *mpls);
 extern int display_keyaction(
     struct mtr_ctl *ctl);
 extern void display_loop(
