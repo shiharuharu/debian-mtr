@@ -1,3 +1,9 @@
+mtr (0.94-1~bpo10+1) buster-backports; urgency=medium
+
+  * Rebuild for buster-backports.
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 17 Mar 2021 16:52:07 +0000
+
 mtr (0.94-1) unstable; urgency=medium
 
   [ Samuel Henrique ]
