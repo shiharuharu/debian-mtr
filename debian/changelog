@@ -1,3 +1,9 @@
+mtr (0.94-2) unstable; urgency=medium
+
+  * d/control: Compile with json support with jansson (closes: #986534)
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 23 Aug 2021 19:17:06 +0100
+
 mtr (0.94-1) unstable; urgency=medium
 
   [ Samuel Henrique ]
