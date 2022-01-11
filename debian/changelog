@@ -1,8 +1,13 @@
-mtr (0.95-1) UNRELEASED; urgency=medium
+mtr (0.95-1) unstable; urgency=medium
 
   * New upstream version 0.95
+   - Fix FTBFS - ui/curses: always use "%s"-style format for printf()-style
+     functions (closes: #997194)
+  * Bump Standards-Version to 4.6.0
+  * d/p/install_on_usrbin.patch: Refresh patch
+  * d/rules: Remove unneeded '-Wl,--as-needed' flag, default now
 
- -- Samuel Henrique <samueloph@debian.org>  Tue, 11 Jan 2022 09:37:27 -0300
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 11 Jan 2022 09:46:46 -0300
 
 mtr (0.94-2) unstable; urgency=medium
 
