@@ -1,3 +1,9 @@
+mtr (0.95-1) UNRELEASED; urgency=medium
+
+  * New upstream version 0.95
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 11 Jan 2022 09:37:27 -0300
+
 mtr (0.94-2) unstable; urgency=medium
 
   * d/control: Compile with json support with jansson (closes: #986534)
