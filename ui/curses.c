@@ -3,7 +3,7 @@
     Copyright (C) 1997,1998  Matt Kimball
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -390,7 +390,7 @@ static void format_field(
         format_number(n, 5, dst);
     } else if (strchr(format, 'f')) {
         /* this is for fields where we measure integer microseconds but
-           display floating point miliseconds. Convert to float here. */
+           display floating point milliseconds. Convert to float here. */
         snprintf(dst, dst_length, format, n / 1000.0);
         /* this was marked as a temporary hack over 10 years ago. -- REW */
     } else {
@@ -432,15 +432,15 @@ static void mtr_curses_hosts(
                 attron(A_BOLD);
 #ifdef HAVE_IPINFO
             if (is_printii(ctl))
-                printw(fmt_ipinfo(ctl, addr));
+                printw("%s", fmt_ipinfo(ctl, addr));
 #endif
             if (name != NULL) {
                 if (ctl->show_ips)
-                    printw("%s (%s)", name, strlongip(ctl, addr));
+                    printw("%s (%s)", name, strlongip(ctl->af, addr));
                 else
                     printw("%s", name);
             } else {
-                printw("%s", strlongip(ctl, addr));
+                printw("%s", strlongip(ctl->af, addr));
             }
             attroff(A_BOLD);
 
@@ -451,7 +451,7 @@ static void mtr_curses_hosts(
             hd_len = 0;
             for (i = 0; i < MAXFLD; i++) {
                 /* Ignore options that don't exist */
-                /* On the other hand, we now check the input side. Shouldn't happen, 
+                /* On the other hand, we now check the input side. Shouldn't happen,
                    can't be careful enough. */
                 j = ctl->fld_index[ctl->fld_active[i]];
                 if (j == -1)
@@ -485,15 +485,15 @@ static void mtr_curses_hosts(
                 printw("\n    ");
 #ifdef HAVE_IPINFO
                 if (is_printii(ctl))
-                    printw(fmt_ipinfo(ctl, addrs));
+                    printw("%s", fmt_ipinfo(ctl, addrs));
 #endif
                 if (name != NULL) {
                     if (ctl->show_ips)
-                        printw("%s (%s)", name, strlongip(ctl, addrs));
+                        printw("%s (%s)", name, strlongip(ctl->af, addrs));
                     else
                         printw("%s", name);
                 } else {
-                    printw("%s", strlongip(ctl, addrs));
+                    printw("%s", strlongip(ctl->af, addrs));
                 }
                 for (k = 0; k < mplss->labels && ctl->enablempls; k++) {
                     printw("\n    [MPLS: Lbl %lu TC %u S %u TTL %u]",
@@ -650,10 +650,10 @@ static void mtr_curses_graph(
 
 #ifdef HAVE_IPINFO
             if (is_printii(ctl))
-                printw(fmt_ipinfo(ctl, addr));
+                printw("%s", fmt_ipinfo(ctl, addr));
 #endif
             name = dns_lookup(ctl, addr);
-            printw("%s", name ? name : strlongip(ctl, addr));
+            printw("%s", name ? name : strlongip(ctl->af, addr));
         } else {
             attron(A_BOLD);
             printw("(%s)", host_error_to_string(err));
@@ -698,9 +698,11 @@ void mtr_curses_redraw(
     pwcenter(buf);
     attroff(A_BOLD);
 
-    mvprintw(1, 0, "%s (%s) -> %s", ctl->LocalHostname, net_localaddr(), ctl->Hostname);
+    mvprintw(1, 0, "%s (%s) -> %s (%s)",
+	ctl->LocalHostname, net_localaddr(),
+	ctl->Hostname, net_remoteaddr());
     t = time(NULL);
-    mvprintw(1, maxx - 25, iso_time(&t));
+    mvprintw(1, maxx - 25, "%s", iso_time(&t));
     printw("\n");
 
     printw("Keys:  ");
@@ -760,7 +762,7 @@ void mtr_curses_redraw(
         startstat = padding - 2;
 
         snprintf(msg, sizeof(msg), " Last %3d pings", max_cols);
-        mvprintw(rowstat - 1, startstat, msg);
+        mvprintw(rowstat - 1, startstat, "%s", msg);
 
         attroff(A_BOLD);
         move(rowstat, 0);

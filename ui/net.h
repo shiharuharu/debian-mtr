@@ -3,7 +3,7 @@
     Copyright (C) 1997,1998  Matt Kimball
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -33,10 +33,10 @@
 
 extern int net_open(
     struct mtr_ctl *ctl,
-    struct hostent *host);
+    struct addrinfo *res);
 extern void net_reopen(
     struct mtr_ctl *ctl,
-    struct hostent *address);
+    struct addrinfo *res);
 extern void net_reset(
     struct mtr_ctl *ctl);
 extern void net_close(
@@ -58,9 +58,9 @@ extern ip_t *net_addr(
     int at);
 extern int net_err(
     int at);
-extern void *net_mpls(
+extern struct mplslen *net_mpls(
     int at);
-extern void *net_mplss(
+extern struct mplslen *net_mplss(
     int,
     int);
 extern int net_loss(
@@ -89,6 +89,8 @@ extern ip_t *net_addrs(
     int at,
     int i);
 extern char *net_localaddr(
+    void);
+extern char *net_remoteaddr(
     void);
 
 extern int net_send_batch(
