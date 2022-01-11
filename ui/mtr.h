@@ -4,7 +4,7 @@
     Copyright (C) 2005 R.E.Wolff@BitWizard.nl
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -23,6 +23,7 @@
 #include "config.h"
 
 #include <stdint.h>
+#include <netdb.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
@@ -32,8 +33,10 @@
 
 /* Typedefs */
 #ifdef ENABLE_IPV6
+#define DEFAULT_AF AF_UNSPEC
 typedef struct in6_addr ip_t;
 #else
+#define DEFAULT_AF AF_INET
 typedef struct in_addr ip_t;
 #endif
 
@@ -82,7 +85,7 @@ struct mtr_ctl {
     int MaxPing;
     float WaitTime;
     float GraceTime;
-    char *Hostname;
+    const char *Hostname;
     char *InterfaceName;
     char *InterfaceAddress;
     char LocalHostname[128];
@@ -145,5 +148,10 @@ struct mplslen {
 #else
 #define running_as_root() (getuid() == 0)
 #endif
+
+int get_addrinfo_from_name(
+    struct mtr_ctl *ctl,
+    struct addrinfo **res,
+    const char *name);
 
 #endif                          /* MTR_MTR_H */

@@ -5,7 +5,7 @@
     raw.c -- raw output (for logging for later analysis)
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -70,7 +70,7 @@ void raw_rawhost(
     ip_t *ip_addr,
     struct mplslen *mpls)
 {
-    printf("h %d %s\n", host, strlongip(ctl, ip_addr));
+    printf("h %d %s\n", host, strlongip(ctl->af, ip_addr));
     if (ctl->enablempls) {
         int k;
         for (k = 0; k < mpls->labels; k++)

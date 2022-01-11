@@ -3,7 +3,7 @@
     Copyright (C) 1997,1998  Matt Kimball
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -97,11 +97,13 @@ static ip_t *remoteaddress;
 
 #ifdef ENABLE_IPV6
 static char localaddr[INET6_ADDRSTRLEN];
+static char remoteaddr[INET6_ADDRSTRLEN];
 #else
 #ifndef INET_ADDRSTRLEN
 #define INET_ADDRSTRLEN 16
 #endif
 static char localaddr[INET_ADDRSTRLEN];
+static char remoteaddr[INET_ADDRSTRLEN];
 #endif
 
 static int batch_at = 0;
@@ -239,22 +241,21 @@ static void net_process_ping(
 
 
     if (addrcmp(&nh->addr, &addrcopy, ctl->af) != 0) {
-        for (i = 0; i < MAX_PATH;) {
-            if (addrcmp(&nh->addrs[i], &nh->addr, ctl->af) == 0) {
+        for (i = 0; i < MAX_PATH; i++) {
+            if (addrcmp(&nh->addrs[i], &addrcopy, ctl->af) == 0) {
                 found = 1; /* This host is already in the list */
                 break;
             }
             if (addrcmp(&nh->addrs[i], &ctl->unspec_addr, ctl->af) == 0) {
                 break; /* Found first vacant position */
             }
-            i++;
         }
 
         if (found == 0 && i < MAX_PATH) {
-            memcpy(&nh->addrs[i], &nh->addr, sockaddr_addr_size(sourcesockaddr));
+            memcpy(&nh->addrs[i], &addrcopy, sockaddr_addr_size(sourcesockaddr));
 
-            nh->mplss[i] = nh->mpls;
-            display_rawhost(ctl, index, (void *)&(nh->addrs[i]), (void *)&(nh->addrs[i]));
+            nh->mplss[i] = *mpls;
+            display_rawhost(ctl, index, &nh->addrs[i], mpls);
         }
 
         /* Always save the latest host in nh->addr. This
@@ -262,7 +263,7 @@ static void net_process_ping(
          */
         memcpy(&nh->addr, addrcopy, sockaddr_addr_size(sourcesockaddr));
         nh->mpls = *mpls;
-        display_rawhost(ctl, index, (void *)&(nh->addr), (void *)&(nh->mpls));
+        display_rawhost(ctl, index, &nh->addr, mpls);
     }
 
     nh->jitter = totusec - nh->last;
@@ -332,7 +333,7 @@ void net_process_return(
 ip_t *net_addr(
     int at)
 {
-    return (ip_t *) & (host[at].addr);
+    return & (host[at].addr);
 }
 
 
@@ -340,7 +341,7 @@ ip_t *net_addrs(
     int at,
     int i)
 {
-    return (ip_t *) & (host[at].addrs[i]);
+    return & (host[at].addrs[i]);
 }
 
 /*
@@ -352,17 +353,17 @@ int net_err(
     return host[at].err;
 }
 
-void *net_mpls(
+struct mplslen *net_mpls(
     int at)
 {
-    return (struct mplslen *) &(host[at].mplss);
+    return & (host[at].mpls);
 }
 
-void *net_mplss(
+struct mplslen *net_mplss(
     int at,
     int i)
 {
-    return (struct mplslen *) &(host[at].mplss[i]);
+    return & (host[at].mplss[i]);
 }
 
 int net_loss(
@@ -523,6 +524,13 @@ char *net_localaddr(
 }
 
 
+char *net_remoteaddr(
+    void)
+{
+    return remoteaddr;
+}
+
+
 void net_end_transit(
     void)
 {
@@ -539,18 +547,18 @@ int net_send_batch(
     int n_unknown = 0, i;
     int restart = 0;
 
-    /* randomized packet size and/or bit pattern if packetsize<0 and/or 
-       bitpattern<0.  abs(packetsize) and/or abs(bitpattern) will be used 
+    /* randomized packet size and/or bit pattern if packetsize<0 and/or
+       bitpattern<0.  abs(packetsize) and/or abs(bitpattern) will be used
      */
     if (batch_at < ctl->fstTTL) {
         if (ctl->cpacketsize < 0) {
-            /* Someone used a formula here that tried to correct for the 
-               "end-error" in "rand()". By "end-error" I mean that if you 
-               have a range for "rand()" that runs to 32768, and the 
-               destination range is 10000, you end up with 4 out of 32768 
-               0-2768's and only 3 out of 32768 for results 2769 .. 9999. 
-               As our destination range (in the example 10000) is much 
-               smaller (reasonable packet sizes), and our rand() range much 
+            /* Someone used a formula here that tried to correct for the
+               "end-error" in "rand()". By "end-error" I mean that if you
+               have a range for "rand()" that runs to 32768, and the
+               destination range is 10000, you end up with 4 out of 32768
+               0-2768's and only 3 out of 32768 for results 2769 .. 9999.
+               As our destination range (in the example 10000) is much
+               smaller (reasonable packet sizes), and our rand() range much
                larger, this effect is insignificant. Oh! That other formula
                didn't work. */
             packetsize =
@@ -570,9 +578,9 @@ int net_send_batch(
         if (host_addr_cmp(i, &ctl->unspec_addr, ctl->af) == 0)
             n_unknown++;
 
-        /* The second condition in the next "if" statement was added in mtr-0.56, 
+        /* The second condition in the next "if" statement was added in mtr-0.56,
            but I don't remember why. It makes mtr stop skipping sections of unknown
-           hosts. Removed in 0.65. 
+           hosts. Removed in 0.65.
            If the line proves necessary, it should at least NOT trigger that line
            when host[i].addr == 0 */
         if (host_addr_cmp(i, remoteaddress, ctl->af) == 0) {
@@ -592,7 +600,7 @@ int net_send_batch(
         numhosts = batch_at + 1;
     }
 
-    if(restart) {
+    if (restart) {
         batch_at = ctl->fstTTL - 1;
         return 1;
     }
@@ -728,7 +736,7 @@ static void net_find_local_address(
 
 int net_open(
     struct mtr_ctl *ctl,
-    struct hostent *hostent)
+    struct addrinfo *res)
 {
     int err;
 
@@ -738,23 +746,7 @@ int net_open(
         return err;
     }
 
-    net_reset(ctl);
-
-    remotesockaddr->sa_family = sourcesockaddr->sa_family = hostent->h_addrtype;
-    memcpy(sockaddr_addr_offset(remotesockaddr), hostent->h_addr, sockaddr_addr_size(remotesockaddr));
-
-    sourceaddress = sockaddr_addr_offset(sourcesockaddr);
-    remoteaddress = sockaddr_addr_offset(remotesockaddr);
-
-    if (ctl->InterfaceAddress) {
-        net_validate_interface_address(ctl->af, ctl->InterfaceAddress);
-    } else if (ctl->InterfaceName) {
-        net_find_interface_address_from_name(
-            &sourcesockaddr_struct, ctl->af, ctl->InterfaceName);
-        inet_ntop(sourcesockaddr->sa_family, sockaddr_addr_offset(sourcesockaddr), localaddr, sizeof(localaddr));
-    } else {
-        net_find_local_address();
-    }
+    net_reopen(ctl, res);
 
     return 0;
 }
@@ -762,7 +754,7 @@ int net_open(
 
 void net_reopen(
     struct mtr_ctl *ctl,
-    struct hostent *addr)
+    struct addrinfo *res)
 {
     int at;
 
@@ -770,11 +762,25 @@ void net_reopen(
         memset(&host[at], 0, sizeof(host[at]));
     }
 
-    remotesockaddr->sa_family = addr->h_addrtype;
-    memcpy(remoteaddress, addr->h_addr, sockaddr_addr_size(remotesockaddr));
-    memcpy(sockaddr_addr_offset(remotesockaddr), addr->h_addr, sockaddr_addr_size(remotesockaddr));
     net_reset(ctl);
-    net_send_batch(ctl);
+
+    ctl->af = remotesockaddr->sa_family = sourcesockaddr->sa_family = res->ai_family;
+    remoteaddress = sockaddr_addr_offset(remotesockaddr);
+    memcpy(remoteaddress, sockaddr_addr_offset(res->ai_addr), sockaddr_addr_size(remotesockaddr));
+    inet_ntop(remotesockaddr->sa_family, remoteaddress, remoteaddr, sizeof(remoteaddr));
+
+    sourceaddress = sockaddr_addr_offset(sourcesockaddr);
+
+    if (ctl->InterfaceAddress) {
+        net_validate_interface_address(ctl->af, ctl->InterfaceAddress);
+    } else if (ctl->InterfaceName) {
+        net_find_interface_address_from_name(
+            &sourcesockaddr_struct, ctl->af, ctl->InterfaceName);
+        inet_ntop(sourcesockaddr->sa_family, sourceaddress, localaddr, sizeof(localaddr));
+    } else {
+        net_find_local_address();
+    }
+
 }
 
 

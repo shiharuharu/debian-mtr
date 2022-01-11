@@ -4,7 +4,7 @@
     Changes/additions Copyright (C) 1998 R.E.Wolff@BitWizard.nl
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -94,7 +94,7 @@ int gtk_detect(
 {
     if (getenv("DISPLAY") != NULL) {
         /* If we do this here, gtk_init exits on an error. This happens
-           BEFORE the user has had a chance to tell us not to use the 
+           BEFORE the user has had a chance to tell us not to use the
            display... */
         return TRUE;
     } else {
@@ -244,11 +244,14 @@ static gint Host_activate(
     gpointer data)
 {
     struct mtr_ctl *ctl = (struct mtr_ctl *) data;
-    struct hostent *addr;
+    struct addrinfo *res = NULL;
 
-    addr = dns_forward(gtk_entry_get_text(GTK_ENTRY(entry)));
-    if (addr) {
-        net_reopen(ctl, addr);
+    ctl->af = DEFAULT_AF;  // should this obey the cmd line option?
+    ctl->Hostname = gtk_entry_get_text(GTK_ENTRY(entry));
+    if (get_addrinfo_from_name(ctl, &res, ctl->Hostname) == 0) {
+        net_reopen(ctl, res);
+        freeaddrinfo(res);
+        net_send_batch(ctl);
         /* If we are "Paused" at this point it is usually because someone
            entered a non-existing host. Therefore do the go-ahead... */
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(Pause_Button), 0);
@@ -511,11 +514,11 @@ static void update_tree_row(
         if ((name = dns_lookup(ctl, addr))) {
             if (ctl->show_ips) {
                 snprintf(str, sizeof(str), "%s (%s)", name,
-                         strlongip(ctl, addr));
+                         strlongip(ctl->af, addr));
                 name = str;
             }
         } else
-            name = strlongip(ctl, addr);
+            name = strlongip(ctl->af, addr);
     }
 
     gtk_list_store_set(ReportStore, iter,
@@ -565,7 +568,7 @@ void gtk_redraw(
 }
 
 // GTK 3 has changed the interface a bit. Here a few defines so that we can
-// work with GTK2 or GTK3 as required. 
+// work with GTK2 or GTK3 as required.
 #ifdef HAVE_GTK3
 #define gtk_vbox_new_(orientation,sz) gtk_box_new(orientation, sz)
 #define gtk_hbox_new_(orientation,sz) gtk_box_new(orientation, sz)

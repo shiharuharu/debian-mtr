@@ -43,7 +43,7 @@
 #include "utils.h"
 
 #define MAXLOADBAL 5
-#define MAX_FORMAT_STR 81
+#define MAX_FORMAT_STR 320
 
 
 void report_open(
@@ -65,10 +65,10 @@ static size_t snprint_addr(
         struct hostent *host =
             ctl->dns ? addr2host((void *) addr, ctl->af) : NULL;
         if (!host)
-            return snprintf(dst, dst_len, "%s", strlongip(ctl, addr));
+            return snprintf(dst, dst_len, "%s", strlongip(ctl->af, addr));
         else if (ctl->dns && ctl->show_ips)
             return snprintf(dst, dst_len, "%s (%s)", host->h_name,
-                            strlongip(ctl, addr));
+                            strlongip(ctl->af, addr));
         else
             return snprintf(dst, dst_len, "%s", host->h_name);
     } else
@@ -170,7 +170,7 @@ void report_close(
             if (j < 0)
                 continue;
 
-            /* 1000.0 is a temporay hack for stats usec to ms, impacted net_loss. */
+            /* 1000.0 is a temporary hack for stats usec to ms, impacted net_loss. */
             if (strchr(data_fields[j].format, 'f')) {
                 snprintf(buf + len, sizeof(buf), data_fields[j].format,
                          data_fields[j].net_xxx(at) / 1000.0);
@@ -215,14 +215,14 @@ void report_close(
             if (!found) {
 
 #ifdef HAVE_IPINFO
+                if (mpls->labels && z == 1 && ctl->enablempls)
+                    print_mpls(mpls);
                 if (is_printii(ctl)) {
-                    if (mpls->labels && z == 1 && ctl->enablempls)
-                        print_mpls(mpls);
                     snprint_addr(ctl, name, sizeof(name), addr2);
                     printf("     %s%s\n", fmt_ipinfo(ctl, addr2), name);
-                    if (ctl->enablempls)
-                        print_mpls(mplss);
                 }
+                if (ctl->enablempls)
+                    print_mpls(mplss);
 #else
                 int k;
                 if (mpls->labels && z == 1 && ctl->enablempls) {
@@ -235,7 +235,7 @@ void report_close(
                 }
 
                 if (z == 1) {
-                    printf("    |  `|-- %s\n", strlongip(ctl, addr2));
+                    printf("    |  `|-- %s\n", strlongip(ctl->af, addr2));
                     for (k = 0; k < mplss->labels && ctl->enablempls; k++) {
                         printf
                             ("    |   +-- [MPLS: Lbl %lu TC %u S %u TTL %u]\n",
@@ -243,7 +243,7 @@ void report_close(
                              mplss->ttl[k]);
                     }
                 } else {
-                    printf("    |   |-- %s\n", strlongip(ctl, addr2));
+                    printf("    |   |-- %s\n", strlongip(ctl->af, addr2));
                     for (k = 0; k < mplss->labels && ctl->enablempls; k++) {
                         printf
                             ("    |   +-- [MPLS: Lbl %lu TC %u S %u TTL %u]\n",
@@ -344,7 +344,7 @@ void json_close(struct mtr_ctl *ctl)
             goto on_error;
 
 #ifdef HAVE_IPINFO
-        if(!ctl->ipinfo_no) {
+        if (!ctl->ipinfo_no) {
             char* fmtinfo = fmt_ipinfo(ctl, addr);
             if (fmtinfo != NULL)
                 fmtinfo = trim(fmtinfo, '\0');
@@ -385,7 +385,7 @@ void json_close(struct mtr_ctl *ctl)
     if (ret == -1)
         goto on_error;
 
-    printf("\n"); // bash promt should be on new line
+    printf("\n"); // bash prompt should be on new line
     json_decref(jreport);
     return;
 on_error:
@@ -447,7 +447,7 @@ void xml_close(
                 title = "Loss";
             }
 
-            /* 1000.0 is a temporay hack for stats usec to ms, impacted net_loss. */
+            /* 1000.0 is a temporary hack for stats usec to ms, impacted net_loss. */
             if (strchr(data_fields[j].format, 'f')) {
                 printf(name,
                        title, data_fields[j].net_xxx(at) / 1000.0, title);
@@ -470,8 +470,9 @@ void csv_close(
     struct mtr_ctl *ctl,
     time_t now)
 {
-    int i, j, at, max;
+    int i, j, at, max, z, w;
     ip_t *addr;
+    ip_t *addr2 = NULL;
     char name[MAX_FORMAT_STR];
 
     for (i = 0; i < MAXFLD; i++) {
@@ -518,7 +519,7 @@ void csv_close(
             if (j < 0)
                 continue;
 
-            /* 1000.0 is a temporay hack for stats usec to ms, impacted net_loss. */
+            /* 1000.0 is a temporary hack for stats usec to ms, impacted net_loss. */
             if (strchr(data_fields[j].format, 'f')) {
                 printf(",%.2f",
                        (double) (data_fields[j].net_xxx(at) / 1000.0));
@@ -527,5 +528,61 @@ void csv_close(
             }
         }
         printf("\n");
+        if (ctl->reportwide == 0)
+            continue;
+        
+        for (z = 0; z < MAX_PATH; z++) {
+            int found = 0;
+            addr2 = net_addrs(at, z);
+            snprint_addr(ctl, name, sizeof(name), addr2);
+            if ((addrcmp
+                    ((void *) &ctl->unspec_addr, (void *) addr2,
+                     ctl->af)) == 0) {
+                break;
+            } else if ((addrcmp
+                    ((void *) addr, (void *) addr2,
+                     ctl->af)) == 0) {
+                continue; /* Latest Host is already printed */
+            } else {
+                for (w = 0; w < z; w++)
+                    /* Ok... checking if there are ips repeated on same hop */
+                    if ((addrcmp
+                            ((void *) addr2, (void *) net_addrs(at, w),
+                             ctl->af)) == 0) {
+                        found = 1;
+                        break;
+                    }
+
+                if (!found) {
+#ifdef HAVE_IPINFO
+                    if (!ctl->ipinfo_no) {
+                        char *fmtinfo = fmt_ipinfo(ctl, addr2);
+                        fmtinfo = trim(fmtinfo, '\0');
+                        printf("MTR.%s,%lld,%s,%s,%d,%s,%s", PACKAGE_VERSION,
+                            (long long) now, "OK", ctl->Hostname, at + 1, name,
+                            fmtinfo);
+                    } else
+#endif
+                        printf("MTR.%s,%lld,%s,%s,%d,%s", PACKAGE_VERSION,
+                           (long long) now, "OK", ctl->Hostname, at + 1, name);
+
+                    /* Use values associated with the first ip discovered for this hop */
+                    for (i = 0; i < MAXFLD; i++) {
+                        j = ctl->fld_index[ctl->fld_active[i]];
+                        if (j < 0)
+                            continue;
+
+                        /* 1000.0 is a temporary hack for stats usec to ms, impacted net_loss. */
+                        if (strchr(data_fields[j].format, 'f')) {
+                            printf(",%.2f",
+                                   (double) (data_fields[j].net_xxx(at) / 1000.0));
+                        } else {
+                            printf(",%d", data_fields[j].net_xxx(at));
+                        }
+                    }
+                    printf("\n");
+                }
+            }    
+        }
     }
 }

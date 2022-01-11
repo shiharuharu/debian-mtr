@@ -3,7 +3,7 @@
     Copyright (C) 1997,1998  Matt Kimball
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -23,7 +23,7 @@
 /*  Prototypes for dns.c  */
 
 extern void dns_open(
-    struct mtr_ctl *ctl);
+    void);
 extern int dns_waitfd(
     void);
 extern void dns_ack(
@@ -41,10 +41,8 @@ extern char *dns_lookup(
 extern char *dns_lookup2(
     struct mtr_ctl *ctl,
     ip_t * address);
-extern struct hostent *dns_forward(
-    const char *name);
 extern char *strlongip(
-    struct mtr_ctl *ctl,
+    sa_family_t family,
     ip_t * ip);
 
 extern void addr2ip6arpa(
