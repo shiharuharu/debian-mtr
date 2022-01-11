@@ -1,9 +1,7 @@
 Description: Install on usr/bin instead of usr/sbin
 Author: Robert Woodcock <rcw@debian.org>
-Index: mtr/Makefile.am
-===================================================================
---- mtr.orig/Makefile.am
-+++ mtr/Makefile.am
+--- a/Makefile.am
++++ b/Makefile.am
 @@ -5,7 +5,8 @@ EXTRA_DIST = \
  	img/mtr_icon.xpm
  	$(TEST_FILES)
@@ -17,7 +15,7 @@ Index: mtr/Makefile.am
 @@ -41,8 +42,8 @@ dist_man_MANS = mtr.8 mtr-packet.8
  PATHFILES += man/mtr.8 man/mtr-packet.8
  
- install-exec-hook: 
+ install-exec-hook:
 -	`setcap cap_net_raw+ep $(DESTDIR)$(sbindir)/mtr-packet` \
 -	|| chmod u+s $(DESTDIR)$(sbindir)/mtr-packet
 +	`setcap cap_net_raw+ep $(DESTDIR)$(bindir)/mtr-packet` \
