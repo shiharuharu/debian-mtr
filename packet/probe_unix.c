@@ -42,6 +42,58 @@
 #include "deconstruct_unix.h"
 #include "timeval.h"
 
+/*
+    Given the address of a network interface and find the name of that.
+*/
+// static void net_find_interface_name_from_address(
+//     struct sockaddr_storage *addr,
+//     int address_family,
+//     const char *interface_name)
+// {
+//     struct ifaddrs *ifaddrs;
+//     struct ifaddrs *interface;
+//     int found_interface_name = 0;
+
+//     if (getifaddrs(&ifaddrs) != 0) {
+//         error(EXIT_FAILURE, errno, "getifaddrs failure");
+//     }
+
+//     interface = ifaddrs;
+//     while (interface != NULL) {
+//         if (interface->ifa_addr != NULL && !strcmp(interface->ifa_name, interface_name)) {
+//             found_interface_name = 1;
+
+//             if (interface->ifa_addr->sa_family == address_family) {
+//                 if (address_family == AF_INET) {
+//                     memcpy(addr,
+//                         interface->ifa_addr, sizeof(struct sockaddr_in));
+//                     freeifaddrs(ifaddrs);
+
+//                     return;
+//                 } else if (address_family == AF_INET6) {
+//                     memcpy(addr,
+//                         interface->ifa_addr, sizeof(struct sockaddr_in6));
+//                     freeifaddrs(ifaddrs);
+
+//                     return;
+//                 }
+//             }
+//         }
+
+//         interface = interface->ifa_next;
+//     }
+
+//     if (!found_interface_name) {
+//         error(EXIT_FAILURE, 0, "no such interface");
+//     } else if (address_family == AF_INET) {
+//         error(EXIT_FAILURE, 0, "interface missing IPv4 address");
+//     } else if (address_family == AF_INET6) {
+//         error(EXIT_FAILURE, 0, "interface missing IPv6 address");
+//     } else {
+//         error(EXIT_FAILURE, 0, "interface missing address");
+//     }
+// }
+
 /*  A wrapper around sendto for mixed IPv4 and IPv6 sending  */
 static
 int send_packet(
